@@ -1,0 +1,490 @@
+/* minimal globals for admin */
+html,body,#__next{height:100%;}
+
+
+/* admin/src/app/globals.css */
+
+/* ============================================================
+   TAILWIND DIRECTIVES
+   ============================================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   CUSTOM PROPERTIES (CSS Variables)
+   ============================================================ */
+:root {
+  /* Admin dashboard color system */
+  --admin-primary: #D4AF37;
+  --admin-secondary: #8B5E3C;
+  --admin-bg: #0b0b0b;
+  --admin-card: #131313;
+  --admin-text: #111827;
+  --admin-secondary-text: #374151;
+  --admin-label: #1F2937;
+  --admin-description: #4B5563;
+  --admin-muted: #6B7280;
+  --admin-border: #242424;
+  --admin-hover: #000000;
+  --admin-success: #16A34A;
+  --admin-danger: #DC2626;
+  --admin-warning: #F59E0B;
+  --admin-info: #3B82F6;
+
+  /* Legacy aliases retained for existing components */
+  --gold: #D4AF37;
+  --gold-light: #E8D5A3;
+  --gold-dark: #B8962E;
+  --marble-white: #121212;
+  --temple-ivory: #1f1f1f;
+  --deep-maroon: #7B1E1E;
+  --maroon-dark: #5C1616;
+  --maroon-light: #A04040;
+  --light-sand: #313131;
+  --royal-brown: #111827;
+  --brown-light: #4B5563;
+  --brown-dark: #020202;
+  --premium-black: #1A1814;
+  --ivory: #161616;
+  --sand: #0c0c0c;
+  --brown: #111827;
+
+  /* Typography */
+  --font-cinzel: 'Cinzel', serif;
+  --font-inter: 'Inter', sans-serif;
+
+  /* Spacing & Radius */
+  --radius: 16px;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.12);
+  --shadow-gold: 0 12px 40px rgba(201, 168, 76, 0.25);
+
+  /* Transitions */
+  --transition-smooth: 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-bounce: 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+.dark {
+  --admin-bg: #323232;
+  --admin-card: #000000;
+  --admin-text: #111827;
+  --admin-secondary-text: #374151;
+  --admin-label: #1F2937;
+  --admin-description: #4B5563;
+  --admin-muted: #6B7280;
+  --admin-border: #0a0a0a;
+  --admin-hover: #000000;
+  --ivory: #000000;
+  --sand: #000000;
+  --brown: #111827;
+  --brown-light: #4B5563;
+  --brown-dark: #000000;
+  --marble-white: #000000;
+  --temple-ivory: #000000;
+  --light-sand: #000000;
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 12px 40px rgba(201, 168, 76, 0.2);
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--brown-light);
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-admin-bg text-admin-text font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-gold/20 text-brown;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-ivory;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold/50 rounded-full;
+    transition: background 0.3s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-dark;
+  }
+
+  /* Focus outlines */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-cinzel text-admin-text;
+  }
+
+  label {
+    color: var(--admin-label);
+  }
+
+  input,
+  textarea,
+  select,
+  option {
+    color: var(--admin-text);
+    background-color: #ffffff;
+    border-color: var(--admin-border);
+  }
+
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--admin-muted);
+    opacity: 1;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  img {
+    @apply max-w-full h-auto;
+    display: block;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+/* ============================================================
+   CUSTOM UTILITY CLASSES
+   ============================================================ */
+@layer utilities {
+  /* Font families */
+  .font-cinzel {
+    font-family: var(--font-cinzel);
+  }
+  .font-inter {
+    font-family: var(--font-inter);
+  }
+
+  /* Container */
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section padding (admin uses less padding) */
+  .section-padding {
+    @apply py-8 md:py-12;
+  }
+
+  /* Buttons (reuse from frontend) */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-medium text-white
+           bg-gradient-to-r from-gold to-gold-dark shadow-gold
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-maroon {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-medium text-white
+           bg-gradient-to-r from-deep-maroon to-maroon-dark shadow-md
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-deep-maroon/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline-gold {
+    @apply inline-flex items-center justify-center gap-2 px-6 py-2.5 rounded-full font-medium text-gold-dark
+           border-2 border-gold bg-transparent
+           transition-all duration-300 hover:bg-gold hover:text-white active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* Glassmorphism (lighter for admin) */
+  .glass {
+    @apply bg-white/60 dark:bg-brown-dark/60 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
+  }
+
+  .glass-dark {
+    @apply bg-brown/80 dark:bg-premium-black/80 backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+
+  /* Cards (admin uses simpler cards) */
+  .card-premium {
+    @apply bg-white dark:bg-brown-dark rounded-xl border border-gold/5 dark:border-gold/10 shadow-sm
+           transition-all duration-300 hover:shadow-md;
+  }
+
+  /* Tags */
+  .tag {
+    @apply inline-block text-xs font-semibold tracking-wider uppercase
+           text-gold-dark bg-gold/10 dark:bg-gold/20 dark:text-gold px-3 py-1 rounded-full;
+  }
+
+  /* Animations (lighter for admin) */
+  .animate-fade-in-up {
+    animation: fade-in-up 0.4s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.3s ease-out forwards;
+  }
+}
+
+/* ============================================================
+   KEYFRAMES
+   ============================================================ */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+/* ============================================================
+   ADMIN-SPECIFIC COMPONENT STYLES
+   ============================================================ */
+@layer components {
+  /* Sidebar */
+  .sidebar-link {
+    @apply flex items-center gap-3 px-4 py-2.5 rounded-lg text-sm font-medium transition-all duration-200
+           text-brown-light dark:text-ivory/70 hover:bg-gold/10 hover:text-brown dark:hover:text-ivory
+           data-[active=true]:bg-gold/10 dark:data-[active=true]:bg-gold/20
+           data-[active=true]:text-gold-dark dark:data-[active=true]:text-gold;
+  }
+
+  .sidebar-link .icon {
+    @apply w-5 h-5 shrink-0;
+  }
+
+  /* Admin Data Table */
+  .data-table th {
+    @apply text-left py-3 px-4 font-medium text-admin-secondary-text text-xs uppercase tracking-wider;
+  }
+
+  .data-table td {
+    @apply py-3 px-4 text-admin-description;
+  }
+
+  /* Admin Form */
+  .admin-form label {
+    @apply block text-sm font-medium text-admin-label mb-1;
+  }
+
+  .admin-form .field-error {
+    @apply text-xs text-admin-danger mt-1;
+  }
+
+  /* Stats Cards */
+  .stat-card {
+    @apply bg-white rounded-xl p-5 border border-admin-border shadow-sm;
+  }
+  .stat-card .stat-value {
+    @apply font-cinzel text-2xl font-bold text-admin-text;
+  }
+  .stat-card .stat-label {
+    @apply text-xs text-admin-secondary-text uppercase tracking-wider;
+  }
+
+  /* Modal overlay */
+  .modal-overlay {
+    @apply fixed inset-0 z-50 bg-black/50 backdrop-blur-sm flex items-center justify-center p-4;
+  }
+  .modal-content {
+    @apply bg-white text-admin-text rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto p-6 shadow-2xl border border-admin-border;
+  }
+
+  /* Toast overrides (for admin) */
+  .toast-admin {
+    @apply rounded-xl border border-gold/10 shadow-lg;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  .section-padding {
+    @apply py-6;
+  }
+  .btn-gold, .btn-maroon, .btn-outline-gold {
+    @apply px-4 py-2 text-sm;
+  }
+  .stat-card .stat-value {
+    @apply text-xl;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  .card-premium {
+    border: 1px solid #ddd !important;
+    box-shadow: none !important;
+  }
+}
+
+/* ============================================================
+   FALLBACK FOR OLDER BROWSERS
+   ============================================================ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+  .dark .glass,
+  .dark .glass-dark {
+    background: rgba(26, 24, 20, 0.95) !important;
+  }
+}
+
+/* ============================================================
+   ADMIN CONTRAST GUARDRAILS
+   ============================================================ */
+.bg-white,
+.bg-admin-card,
+.card-premium,
+.modal-content,
+.stat-card,
+table,
+form {
+  color: var(--admin-text);
+}
+
+.bg-white h1,
+.bg-white h2,
+.bg-white h3,
+.bg-white h4,
+.bg-white h5,
+.bg-white h6,
+.bg-admin-card h1,
+.bg-admin-card h2,
+.bg-admin-card h3,
+.bg-admin-card h4,
+.bg-admin-card h5,
+.bg-admin-card h6,
+.modal-content h1,
+.modal-content h2,
+.modal-content h3,
+.modal-content h4 {
+  color: var(--admin-text);
+}
+
+.text-brown,
+.dark .dark\:text-ivory,
+.dark .dark\:text-ivory\/70,
+.dark .dark\:text-ivory\/60 {
+  color: var(--admin-text);
+}
+
+.text-brown-light,
+.dark .dark\:text-ivory\/50,
+.dark .dark\:text-ivory\/40,
+.dark .dark\:text-ivory\/30,
+.dark .dark\:text-ivory\/20 {
+  color: var(--admin-description);
+}
+
+th,
+.data-table th {
+  color: var(--admin-secondary-text);
+}
+
+td,
+.data-table td,
+p,
+span {
+  color: inherit;
+}
+
+.text-red-500,
+.text-red-600,
+.text-red-700 {
+  color: var(--admin-danger);
+}
+
+.text-green-500,
+.text-green-600,
+.text-green-700 {
+  color: var(--admin-success);
+}
+
+.btn-gold,
+.btn-maroon,
+.bg-gold,
+.bg-gold-dark,
+.bg-admin-primary,
+.bg-red-500,
+.bg-red-600,
+[data-active="true"] {
+  color: #ffffff;
+}

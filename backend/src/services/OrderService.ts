@@ -1,0 +1,1 @@
+export class OrderService { static async getAll() { return []; } static async create(data: any) { return data; } }

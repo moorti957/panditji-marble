@@ -1,0 +1,1 @@
+export class DashboardService { static async getStats() { return { totalOrders: 0 }; } }

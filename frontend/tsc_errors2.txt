@@ -1,0 +1,44 @@
+﻿
+src/app/checkout/page.tsx(109,5): error TS2322: Type 'Resolver<{ address: { fullName: 
+string; email: string; phone: string; addressLine1: string; city: string; state: 
+string; pincode: string; addressLine2?: string | undefined; country?: string | 
+undefined; }; shipping: { ...; }; payment: { ...; }; }, any, { ...; }>' is not 
+assignable to type 'Resolver<{ address: { fullName: string; email: string; phone: 
+string; addressLine1: string; city: string; state: string; pincode: string; country: 
+string; addressLine2?: string | undefined; }; shipping: { ...; }; payment: { ...; }; 
+}, any, { ...; }>'.
+src/app/page.tsx(106,66): error TS2741: Property 'category' is missing in type '{ 
+description: string; inStock: true; createdAt: string; updatedAt: string; id: string; 
+name: string; slug: string; price: number; originalPrice?: number; images: string[]; 
+rating?: number; isNew?: boolean; isFeatured?: boolean; }' but required in type 
+'Product'.
+src/app/products/[slug]/page.tsx(127,20): error TS2345: Argument of type 'string' is 
+not assignable to parameter of type 'Product'.
+src/app/products/page.tsx(54,5): error TS2322: Type 'string' is not assignable to 
+type 'ProductSortOption | undefined'.
+src/app/products/page.tsx(64,5): error TS2339: Property 'data' does not exist on type 
+'UseProductsReturn'.
+src/app/products/page.tsx(72,5): error TS2353: Object literal may only specify known 
+properties, and 'search' does not exist in type 'UseProductsOptions'.
+src/app/products/page.tsx(96,9): error TS18048: 'filters.minPrice' is possibly 
+'undefined'.
+src/app/products/page.tsx(97,9): error TS18048: 'filters.maxPrice' is possibly 
+'undefined'.
+src/app/products/page.tsx(107,43): error TS7006: Parameter 'page' implicitly has an 
+'any' type.
+src/app/products/page.tsx(157,24): error TS2339: Property 'map' does not exist on 
+type 'CategoryListResponse'.
+src/app/products/page.tsx(157,29): error TS7006: Parameter 'cat' implicitly has an 
+'any' type.
+src/app/products/page.tsx(191,21): error TS2322: Type 'number | undefined' is not 
+assignable to type 'number'.
+src/app/products/page.tsx(191,39): error TS2322: Type 'number | undefined' is not 
+assignable to type 'number'.
+src/app/products/page.tsx(290,60): error TS2345: Argument of type 'string' is not 
+assignable to parameter of type 'ProductSortOption | undefined'.
+src/app/products/page.tsx(373,37): error TS7006: Parameter 'product' implicitly has 
+an 'any' type.
+src/app/products/page.tsx(373,46): error TS7006: Parameter 'index' implicitly has an 
+'any' type.
+
+

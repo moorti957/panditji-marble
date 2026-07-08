@@ -1,0 +1,139 @@
+﻿
+src/app/(auth)/login/page.tsx(47,5): error TS2322: Type 'Resolver<{ email: string; 
+password: string; rememberMe?: boolean | undefined; }, any, { email: string; 
+password: string; rememberMe: boolean; }>' is not assignable to type 'Resolver<{ 
+email: string; password: string; rememberMe: boolean; }, any, { email: string; 
+password: string; rememberMe: boolean; }>'.
+src/app/(auth)/login/page.tsx(64,9): error TS2353: Object literal may only specify 
+known properties, and 'id' does not exist in type 'LoginCredentials'.
+src/app/(auth)/login/page.tsx(123,40): error TS2345: Argument of type '(data: 
+LoginFormData) => Promise<void>' is not assignable to parameter of type 
+'SubmitHandler<TFieldValues>'.
+src/app/(auth)/register/page.tsx(101,9): error TS2353: Object literal may only 
+specify known properties, and 'id' does not exist in type 'RegisterData'.
+src/app/(auth)/register/page.tsx(265,74): error TS2339: Property 'color' does not 
+exist on type '"" | { label: string; color: string; }'.
+src/app/(auth)/register/page.tsx(266,37): error TS2339: Property 'label' does not 
+exist on type '"" | { label: string; color: string; }'.
+src/app/blogs/[slug]/page.tsx(14,25): error TS2307: Cannot find module 
+'@/services/blogApi' or its corresponding type declarations.
+src/app/blogs/page.tsx(24,25): error TS2307: Cannot find module '@/services/blogApi' 
+or its corresponding type declarations.
+src/app/blogs/page.tsx(60,35): error TS2339: Property 'map' does not exist on type 
+'{}'.
+src/app/blogs/page.tsx(64,35): error TS2339: Property 'filter' does not exist on type 
+'{}'.
+src/app/blogs/page.tsx(155,15): error TS2322: Type 'unknown' is not assignable to 
+type 'Key | null | undefined'.
+src/app/blogs/page.tsx(156,50): error TS2345: Argument of type 'unknown' is not 
+assignable to parameter of type 'SetStateAction<string>'.
+src/app/blogs/page.tsx(163,15): error TS2322: Type 'unknown' is not assignable to 
+type 'ReactNode'.
+src/app/cart/page.tsx(40,5): error TS2339: Property 'totalPrice' does not exist on 
+type 'UseCartReturn'.
+src/app/categories/page.tsx(9,10): error TS2305: Module '"@/types"' has no exported 
+member 'Category'.
+src/app/categories/page.tsx(24,28): error TS2339: Property 'getAll' does not exist on 
+type '{ getCategories: (filters?: CategoryFilters) => Promise<CategoryListResponse>; 
+getCategoryById: (id: string) => Promise<Category>; ... 4 more ...; 
+getCategoryProductsBySlug: (slug: string, page?: number, limit?: number) => 
+Promise<...>; }'.
+src/app/categories/page.tsx(63,40): error TS2339: Property 'reduce' does not exist on 
+type '{}'.
+src/app/categories/page.tsx(89,23): error TS2339: Property 'length' does not exist on 
+type '{}'.
+src/app/categories/page.tsx(95,21): error TS2339: Property 'map' does not exist on 
+type '{}'.
+src/app/categories/page.tsx(145,19): error TS2339: Property 'length' does not exist 
+on type '{}'.
+src/app/categories/page.tsx(175,16): error TS18046: 'cats' is of type 'unknown'.
+src/app/checkout/page.tsx(59,21): error TS2769: No overload matches this call.
+src/app/checkout/page.tsx(66,20): error TS2769: No overload matches this call.
+src/app/checkout/page.tsx(92,18): error TS2339: Property 'totalPrice' does not exist 
+on type 'UseCartReturn'.
+src/app/checkout/page.tsx(109,5): error TS2322: Type 'Resolver<{ address: { fullName: 
+string; email: string; phone: string; addressLine1: string; city: string; state: 
+string; pincode: string; addressLine2?: string | undefined; country?: string | 
+undefined; }; shipping: { ...; }; payment: { ...; }; }, any, { ...; }>' is not 
+assignable to type 'Resolver<{ address: { fullName: string; email: string; phone: 
+string; addressLine1: string; city: string; state: string; pincode: string; country: 
+string; addressLine2?: string | undefined; }; shipping: { ...; }; payment: { ...; }; 
+}, any, { ...; }>'.
+src/app/contact/page.tsx(16,26): error TS2307: Cannot find module 
+'@/components/ui/Textarea' or its corresponding type declarations.
+src/app/gallery/page.tsx(20,28): error TS2307: Cannot find module 
+'@/services/galleryApi' or its corresponding type declarations.
+src/app/gallery/page.tsx(59,39): error TS2339: Property 'filter' does not exist on 
+type '{}'.
+src/app/page.tsx(83,5): error TS2339: Property 'trendingProducts' does not exist on 
+type 'HomeData'.
+src/app/page.tsx(84,5): error TS2339: Property 'latestProducts' does not exist on 
+type 'HomeData'.
+src/app/page.tsx(85,5): error TS2339: Property 'reviews' does not exist on type 
+'HomeData'.
+src/app/page.tsx(107,11): error TS2322: Type 'FeaturedProduct[]' is not assignable to 
+type 'Product[]'.
+src/app/page.tsx(113,23): error TS2740: Type 'HomeStats' is missing the following 
+properties from type 'StatItem[]': length, pop, push, concat, and 35 more.
+src/app/page.tsx(133,23): error TS2322: Type '{ reviews: any; }' is not assignable to 
+type 'IntrinsicAttributes & TestimonialsProps'.
+src/app/page.tsx(138,24): error TS2322: Type 'import("C:/Users/USER2024/Desktop/pandit
+ji-marble/frontend/src/features/home/types/home.types").InstagramPost[]' is not 
+assignable to type 'import("C:/Users/USER2024/Desktop/panditji-marble/frontend/src/com
+ponents/sections/InstagramFeed").InstagramPost[]'.
+src/app/page.tsx(143,23): error TS2322: Type 'YouTubeVideo[]' is not assignable to 
+type 'VideoItem[]'.
+src/app/products/[slug]/page.tsx(35,58): error TS2307: Cannot find module 
+'@/components/ui/Tabs' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(36,23): error TS2307: Cannot find module 
+'@/components/ui/Badge' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(40,29): error TS2307: Cannot find module 
+'@/features/wishlist/hooks/useWishlist' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(41,28): error TS2307: Cannot find module 
+'@/features/products/hooks/useProduct' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(42,36): error TS2307: Cannot find module 
+'@/features/products/hooks/useRelatedProducts' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(43,28): error TS2307: Cannot find module 
+'@/features/reviews/hooks/useReviews' or its corresponding type declarations.
+src/app/products/[slug]/page.tsx(51,19): error TS2305: Module '"@/types"' has no 
+exported member 'Review'.
+src/app/products/page.tsx(54,5): error TS2322: Type 'string' is not assignable to 
+type 'ProductSortOption | undefined'.
+src/app/products/page.tsx(64,5): error TS2339: Property 'data' does not exist on type 
+'UseProductsReturn'.
+src/app/products/page.tsx(72,5): error TS2353: Object literal may only specify known 
+properties, and 'search' does not exist in type 'UseProductsOptions'.
+src/app/products/page.tsx(96,9): error TS18048: 'filters.minPrice' is possibly 
+'undefined'.
+src/app/products/page.tsx(97,9): error TS18048: 'filters.maxPrice' is possibly 
+'undefined'.
+src/app/products/page.tsx(107,43): error TS7006: Parameter 'page' implicitly has an 
+'any' type.
+src/app/products/page.tsx(157,24): error TS2339: Property 'map' does not exist on 
+type 'CategoryListResponse'.
+src/app/products/page.tsx(157,29): error TS7006: Parameter 'cat' implicitly has an 
+'any' type.
+src/app/products/page.tsx(191,21): error TS2322: Type 'number | undefined' is not 
+assignable to type 'number'.
+src/app/products/page.tsx(191,39): error TS2322: Type 'number | undefined' is not 
+assignable to type 'number'.
+src/app/products/page.tsx(290,60): error TS2345: Argument of type 'string' is not 
+assignable to parameter of type 'ProductSortOption | undefined'.
+src/app/products/page.tsx(373,37): error TS7006: Parameter 'product' implicitly has 
+an 'any' type.
+src/app/products/page.tsx(373,46): error TS7006: Parameter 'index' implicitly has an 
+'any' type.
+src/app/profile/page.tsx(38,29): error TS2307: Cannot find module 
+'@/features/wishlist/hooks/useWishlist' or its corresponding type declarations.
+src/app/wishlist/page.tsx(16,29): error TS2307: Cannot find module 
+'@/features/wishlist/hooks/useWishlist' or its corresponding type declarations.
+src/providers/ReactQueryProvider.tsx(104,13): error TS2353: Object literal may only 
+specify known properties, and 'suspense' does not exist in type 
+'OmitKeyof<QueryObserverOptions<unknown, Error, unknown, unknown, readonly unknown[], 
+never>, "suspense" | "queryKey", "strictly">'.
+src/providers/ReactQueryProvider.tsx(156,11): error TS2322: Type '"bottom-right"' is 
+not assignable to type 'DevtoolsPosition | undefined'.
+src/providers/ThemeProvider.tsx(56,59): error TS2345: Argument of type 'Theme' is not 
+assignable to parameter of type 'Theme | (() => Theme)'.
+
+

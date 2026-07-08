@@ -1,0 +1,1 @@
+export const APP_NAME = 'Pandit Ji Marble Murti Art';

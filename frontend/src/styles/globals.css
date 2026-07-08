@@ -1,0 +1,507 @@
+/* frontend/src/styles/globals.css */
+
+/* ============================================================
+   TAILWIND DIRECTIVES
+   ============================================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   CUSTOM PROPERTIES (CSS Variables)
+   ============================================================ */
+:root {
+  /* Brand Colors */
+  --gold: #D4AF37;
+  --gold-light: #E8D5A3;
+  --gold-dark: #B8962E;
+  --marble-white: #FFFFFF;
+  --temple-ivory: #FFFCF7;
+  --deep-maroon: #7B1E1E;
+  --maroon-dark: #5C1616;
+  --maroon-light: #A04040;
+  --light-sand: #F5EDDF;
+  --royal-brown: #6D4C41;
+  --brown-light: #8D6E63;
+  --brown-dark: #4A3428;
+  --premium-black: #1A1814;
+  --ivory: #FFFCF7;
+  --sand: #F5EDDF;
+  --brown: #6D4C41;
+
+  /* Typography */
+  --font-cinzel: 'Cinzel', serif;
+  --font-inter: 'Inter', sans-serif;
+
+  /* Spacing & Radius */
+  --radius: 20px;
+
+  /* Shadows */
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04);
+  --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+  --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.12);
+  --shadow-gold: 0 12px 40px rgba(201, 168, 76, 0.30);
+  --shadow-maroon: 0 12px 40px rgba(123, 30, 30, 0.25);
+
+  /* Transitions */
+  --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+  /* Z-index scale */
+  --z-dropdown: 100;
+  --z-sticky: 200;
+  --z-fixed: 300;
+  --z-modal-backdrop: 400;
+  --z-modal: 500;
+  --z-popover: 600;
+  --z-tooltip: 700;
+  --z-toast: 800;
+}
+
+/* ============================================================
+   DARK MODE OVERRIDES
+   ============================================================ */
+.dark {
+  --ivory: #1A1814;
+  --sand: #2D2A24;
+  --brown: #F5EDDF;
+  --brown-light: #C4B5A5;
+  --brown-dark: #F5EDDF;
+  --marble-white: #1A1814;
+  --temple-ivory: #1A1814;
+  --light-sand: #2D2A24;
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  --shadow-xl: 0 30px 80px rgba(0, 0, 0, 0.6);
+  --shadow-gold: 0 12px 40px rgba(201, 168, 76, 0.20);
+}
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    border-color: var(--brown-light);
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-ivory text-brown font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-gold/20 text-brown;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-ivory;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold/60 rounded-full;
+    transition: background 0.3s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-dark;
+  }
+
+  /* Focus outlines */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-cinzel text-brown;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  img {
+    @apply max-w-full h-auto;
+    display: block;
+  }
+
+  button {
+    @apply cursor-pointer;
+  }
+}
+
+/* ============================================================
+   CUSTOM UTILITY CLASSES
+   ============================================================ */
+@layer utilities {
+  /* Font families */
+  .font-cinzel {
+    font-family: var(--font-cinzel);
+  }
+  .font-inter {
+    font-family: var(--font-inter);
+  }
+
+  /* Container with max-width and padding */
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  /* Section padding */
+  .section-padding {
+    @apply py-12 md:py-16 lg:py-20;
+  }
+
+  /* Section title */
+  .section-title {
+    @apply font-cinzel text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-brown;
+  }
+
+  .section-subtitle {
+    @apply text-brown-light text-sm md:text-base max-w-2xl mx-auto;
+  }
+
+  /* Ornate divider with diamond */
+  .ornate-divider {
+    @apply flex items-center justify-center gap-4 mb-4;
+  }
+  .ornate-divider::before,
+  .ornate-divider::after {
+    content: '';
+    @apply w-16 h-px bg-gradient-to-r from-transparent to-gold;
+  }
+  .ornate-divider::after {
+    @apply from-gold to-transparent;
+  }
+  .ornate-divider .diamond {
+    @apply text-gold text-sm opacity-60 select-none;
+  }
+
+  /* Buttons */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-white
+           bg-gradient-to-r from-gold to-gold-dark shadow-gold
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-maroon {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-white
+           bg-gradient-to-r from-deep-maroon to-maroon-dark shadow-maroon
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-deep-maroon/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-gold-dark
+           border-2 border-gold bg-transparent
+           transition-all duration-300 hover:bg-gold hover:text-white active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .btn-outline-maroon {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-deep-maroon
+           border-2 border-deep-maroon bg-transparent
+           transition-all duration-300 hover:bg-deep-maroon hover:text-white active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-deep-maroon/50 disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/70 dark:bg-brown-dark/70 backdrop-blur-xl border border-white/20 dark:border-white/10 shadow-lg;
+  }
+
+  .glass-dark {
+    @apply bg-brown/80 dark:bg-premium-black/80 backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+
+  /* Cards */
+  .card-premium {
+    @apply bg-white dark:bg-brown-dark rounded-2xl border border-gold/5 dark:border-gold/10 shadow-sm
+           transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Tags */
+  .tag {
+    @apply inline-block text-xs font-semibold tracking-wider uppercase
+           text-gold-dark bg-gold/10 dark:bg-gold/20 dark:text-gold px-4 py-1.5 rounded-full;
+  }
+
+  /* Text gradients */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent;
+  }
+
+  .text-gradient-maroon {
+    @apply bg-gradient-to-r from-deep-maroon to-maroon-dark bg-clip-text text-transparent;
+  }
+
+  /* Animations */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+  }
+
+  .animate-spin-slower {
+    animation: spin-slower 12s linear infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, var(--gold) 0%, var(--ivory) 50%, var(--gold) 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s ease-out forwards;
+  }
+
+  /* Glassmorphism glow */
+  .glow-gold {
+    box-shadow: 0 0 60px rgba(212, 175, 55, 0.15);
+  }
+  .glow-maroon {
+    box-shadow: 0 0 60px rgba(123, 30, 30, 0.12);
+  }
+
+  /* Borders */
+  .border-gold-light {
+    border-color: rgba(212, 175, 55, 0.3);
+  }
+  .border-maroon-light {
+    border-color: rgba(123, 30, 30, 0.3);
+  }
+}
+
+/* ============================================================
+   KEYFRAMES (custom animations)
+   ============================================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-slower {
+  to { transform: rotate(-360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.05); }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes slide-in-right {
+  from {
+    opacity: 0;
+    transform: translateX(40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    opacity: 0;
+    transform: translateX(-40px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes zoom-in {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   COMPONENT LAYERS
+   ============================================================ */
+@layer components {
+  /* Hero */
+  .hero-title {
+    @apply font-cinzel text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight;
+  }
+
+  /* Product Card */
+  .product-card {
+    @apply card-premium overflow-hidden;
+  }
+  .product-card .product-image {
+    @apply aspect-[3/4] overflow-hidden bg-sand dark:bg-brown;
+  }
+  .product-card .product-image img {
+    @apply w-full h-full object-cover transition-transform duration-700 group-hover:scale-105;
+  }
+
+  /* Category Card */
+  .category-card {
+    @apply card-premium overflow-hidden text-center;
+  }
+  .category-card .category-icon {
+    @apply text-4xl mb-2;
+  }
+
+  /* Testimonial Card */
+  .testimonial-card {
+    @apply card-premium p-6;
+  }
+
+  /* Blog Card */
+  .blog-card {
+    @apply card-premium overflow-hidden;
+  }
+  .blog-card .blog-image {
+    @apply aspect-[16/9] overflow-hidden bg-sand;
+  }
+  .blog-card .blog-image img {
+    @apply w-full h-full object-cover transition-transform duration-700 group-hover:scale-105;
+  }
+
+  /* Swiper overrides */
+  .swiper-pagination-bullet-active {
+    @apply bg-gold !important;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply text-gold bg-white/80 dark:bg-brown-dark/80 backdrop-blur rounded-full w-12 h-12 shadow-lg
+           transition-all hover:bg-gold hover:text-white !important;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: white !important;
+    color: black !important;
+  }
+  a {
+    text-decoration: underline !important;
+  }
+  img {
+    max-width: 100% !important;
+  }
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  .section-padding {
+    @apply py-10;
+  }
+  .section-title {
+    @apply text-2xl;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 1024px) {
+  .container {
+    @apply px-6;
+  }
+}
+
+/* ============================================================
+   UTILITY FOR REDUCED MOTION
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ============================================================
+   FALLBACK FOR OLDER BROWSERS
+   ============================================================ */
+@supports not (backdrop-filter: blur(1px)) {
+  .glass,
+  .glass-dark {
+    background: rgba(255, 255, 255, 0.95) !important;
+  }
+  .dark .glass,
+  .dark .glass-dark {
+    background: rgba(26, 24, 20, 0.95) !important;
+  }
+}

@@ -1,0 +1,347 @@
+/* frontend/src/app/globals.css */
+
+/* ============================================================
+   TAILWIND DIRECTIVES
+   ============================================================ */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   BASE STYLES
+   ============================================================ */
+@layer base {
+  /* Custom properties (CSS variables) */
+  :root {
+    /* Brand color palette */
+    --gold: #D4AF37;
+    --gold-light: #E8D5A3;
+    --gold-dark: #B8962E;
+    --maroon: #7B1E1E;
+    --maroon-dark: #5C1616;
+    --maroon-light: #A04040;
+    --ivory: #FFFCF7;
+    --sand: #F5EDDF;
+    --brown: #6D4C41;
+    --brown-light: #8D6E63;
+    --brown-dark: #4A3428;
+    --black: #1A1814;
+    --white: #FFFFFF;
+
+    /* Typography */
+    --font-cinzel: 'Cinzel', serif;
+    --font-inter: 'Inter', sans-serif;
+
+    /* Spacing & radius */
+    --radius: 20px;
+
+    /* Shadows */
+    --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.04);
+    --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.06);
+    --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.08);
+    --shadow-xl: 0 30px 80px rgba(201, 168, 76, 0.15);
+    --shadow-gold: 0 12px 40px rgba(201, 168, 76, 0.25);
+
+    /* Transitions */
+    --transition-smooth: 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+    --transition-bounce: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  /* Reset & base elements */
+  * {
+    /* Use a subtle border color that fits your brand */
+    @apply border-brown/10;
+    scroll-behavior: smooth;
+  }
+
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  body {
+    @apply bg-ivory text-brown font-inter;
+    font-feature-settings: "rlig" 1, "calt" 1;
+    overflow-x: hidden;
+  }
+
+  /* Selection color */
+  ::selection {
+    @apply bg-gold/20 text-brown;
+  }
+
+  /* Scrollbar styling */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    @apply bg-ivory;
+  }
+  ::-webkit-scrollbar-thumb {
+    @apply bg-gold/60 rounded-full;
+    transition: background 0.3s;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-gold-dark;
+  }
+
+  /* Focus outlines */
+  :focus-visible {
+    @apply outline-2 outline-offset-2 outline-gold;
+  }
+
+  /* Typography defaults */
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-cinzel text-brown;
+  }
+
+  a {
+    @apply transition-colors duration-200;
+  }
+
+  img {
+    @apply max-w-full h-auto;
+    display: block;
+  }
+}
+
+/* ============================================================
+   CUSTOM UTILITY CLASSES
+   ============================================================ */
+@layer utilities {
+  .font-cinzel {
+    font-family: var(--font-cinzel);
+  }
+  .font-inter {
+    font-family: var(--font-inter);
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+
+  .section-padding {
+    @apply py-16 md:py-24;
+  }
+
+  .section-title {
+    @apply font-cinzel text-3xl sm:text-4xl md:text-5xl font-bold text-brown;
+  }
+
+  .section-subtitle {
+    @apply text-brown-light text-base sm:text-lg max-w-2xl mx-auto;
+  }
+
+  .ornate-divider {
+    @apply flex items-center justify-center gap-4 mb-4;
+  }
+  .ornate-divider::before,
+  .ornate-divider::after {
+    content: '';
+    @apply w-16 h-px bg-gradient-to-r from-transparent to-gold;
+  }
+  .ornate-divider::after {
+    @apply from-gold to-transparent;
+  }
+  .ornate-divider .diamond {
+    @apply text-gold text-sm opacity-60;
+  }
+
+  /* Buttons */
+  .btn-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-white 
+           bg-gradient-to-r from-gold to-gold-dark shadow-gold 
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-xl active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50;
+  }
+
+  .btn-maroon {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-white 
+           bg-gradient-to-r from-maroon to-maroon-dark shadow-md 
+           transition-all duration-300 hover:scale-[1.02] hover:shadow-lg active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-maroon/50;
+  }
+
+  .btn-outline-gold {
+    @apply inline-flex items-center justify-center gap-2 px-8 py-3.5 rounded-full font-medium text-gold-dark 
+           border-2 border-gold bg-transparent 
+           transition-all duration-300 hover:bg-gold hover:text-white active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-gold/50;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/70 backdrop-blur-xl border border-white/20 shadow-lg;
+  }
+
+  .glass-dark {
+    @apply bg-brown/80 backdrop-blur-xl border border-white/10 shadow-lg;
+  }
+
+  /* Cards */
+  .card-premium {
+    @apply bg-white rounded-2xl border border-gold/5 shadow-sm 
+           transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  /* Tags */
+  .tag {
+    @apply inline-block text-xs font-semibold tracking-wider uppercase 
+           text-gold-dark bg-gold/10 px-4 py-1.5 rounded-full;
+  }
+
+  /* Animations */
+  .animate-float {
+    animation: float 3s ease-in-out infinite;
+  }
+
+  .animate-spin-slow {
+    animation: spin-slow 8s linear infinite;
+  }
+
+  .animate-spin-slower {
+    animation: spin-slower 12s linear infinite;
+  }
+
+  .animate-pulse-glow {
+    animation: pulse-glow 2s ease-in-out infinite;
+  }
+
+  .animate-shimmer {
+    background: linear-gradient(90deg, #D4AF37 0%, #FFFCF7 50%, #D4AF37 100%);
+    background-size: 200% 100%;
+    animation: shimmer 2s ease-in-out infinite;
+  }
+
+  /* Text gradients */
+  .text-gradient-gold {
+    @apply bg-gradient-to-r from-gold to-gold-dark bg-clip-text text-transparent;
+  }
+
+  .text-gradient-maroon {
+    @apply bg-gradient-to-r from-maroon to-maroon-dark bg-clip-text text-transparent;
+  }
+}
+
+/* ============================================================
+   KEYFRAMES (custom animations)
+   ============================================================ */
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-12px); }
+}
+
+@keyframes spin-slow {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes spin-slower {
+  to { transform: rotate(360deg); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { opacity: 0.5; }
+  50% { opacity: 1; }
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scale-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ============================================================
+   COMPONENT LAYERS
+   ============================================================ */
+@layer components {
+  .hero-title {
+    @apply font-cinzel text-5xl sm:text-6xl lg:text-7xl font-bold leading-tight;
+  }
+
+  .product-card {
+    @apply card-premium overflow-hidden;
+  }
+
+  .product-card .product-image {
+    @apply aspect-[3/4] overflow-hidden bg-sand;
+  }
+
+  .product-card .product-image img {
+    @apply w-full h-full object-cover transition-transform duration-700 group-hover:scale-105;
+  }
+
+  /* Swiper custom overrides */
+  .swiper-pagination-bullet-active {
+    @apply bg-gold !important;
+  }
+
+  .swiper-button-prev,
+  .swiper-button-next {
+    @apply text-gold bg-white/80 backdrop-blur rounded-full w-12 h-12 shadow-lg 
+           transition-all hover:bg-gold hover:text-white !important;
+  }
+}
+
+/* ============================================================
+   DARK MODE
+   ============================================================ */
+.dark {
+  --ivory: #1A1814;
+  --sand: #2D2A24;
+  --brown: #F5EDDF;
+  --brown-light: #C4B5A5;
+  --white: #1A1814;
+  --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 8px 40px rgba(0, 0, 0, 0.4);
+  --shadow-lg: 0 20px 60px rgba(0, 0, 0, 0.5);
+  /* Keep radius consistent */
+  --radius: 20px;
+}
+
+/* ============================================================
+   RESPONSIVE OVERRIDES
+   ============================================================ */
+@media (max-width: 640px) {
+  .container {
+    @apply px-4;
+  }
+  .section-padding {
+    @apply py-12;
+  }
+}
+
+/* ============================================================
+   PRINT STYLES
+   ============================================================ */
+@media print {
+  .no-print {
+    display: none !important;
+  }
+  body {
+    background: #fff !important;
+    color: #000 !important;
+  }
+}

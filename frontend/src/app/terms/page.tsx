@@ -1,0 +1,1 @@
+export default function termsPage() { return <div className="container py-20">terms page</div>; }
