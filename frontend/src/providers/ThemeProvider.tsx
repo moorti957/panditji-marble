@@ -64,7 +64,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   );
 
   // Determine the effective theme (considering system preference)
-  const effectiveTheme = theme === 'system' ? (prefersDark ? 'dark' : 'light') : theme;
+const effectiveTheme: ResolvedTheme = 'light';
 
   // Apply theme class to html element
   useEffect(() => {
@@ -105,14 +105,13 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
   }, [prefersDark, theme]);
 
   // Provide context value
-  const contextValue: ThemeContextValue = {
-    theme: effectiveTheme, // Return the resolved theme (not 'system')
-    toggleTheme,
-    setTheme,
-    isDark: effectiveTheme === 'dark',
-    isLight: effectiveTheme === 'light',
-  };
-
+ const contextValue: ThemeContextValue = {
+  theme: 'light',
+  toggleTheme: () => {},
+  setTheme: () => {},
+  isDark: false,
+  isLight: true,
+};
   // Avoid hydration mismatch by not rendering children until mounted
   if (!mounted) {
     return <div style={{ visibility: 'hidden' }}>{children}</div>;

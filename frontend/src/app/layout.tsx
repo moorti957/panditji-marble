@@ -106,7 +106,7 @@ export default function RootLayout({
     >
       <body className="bg-ivory text-brown antialiased">
         <ReactQueryProvider>
-          <ThemeProvider>
+          <>
             <ScrollReset />
 
             {/* Fixed header */}
@@ -137,7 +137,7 @@ export default function RootLayout({
                 error: { icon: '⚠️' },
               }}
             />
-          </ThemeProvider>
+          </>
         </ReactQueryProvider>
       </body>
     </html>
