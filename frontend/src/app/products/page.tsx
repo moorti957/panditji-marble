@@ -143,7 +143,7 @@ const [filters, setFilters] = useState<ProductFilters>({
   ];
 
   // Material options (hardcoded or from API)
-  const materialOptions = ['Marble', 'Brass', 'Wood', 'Stone', 'Bronze'];
+  const materialOptions = ['Marble',  'Stone'];
 
   // Price range (can be dynamic from API)
   const priceRange = { min: 0, max: 100000 };

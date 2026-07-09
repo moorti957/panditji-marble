@@ -71,7 +71,7 @@ const mockOrders: Record<string, OrderDetails> = {
     trackingNumber: 'TRK123456789',
     carrier: 'DTDC Express',
     items: [
-      { name: 'Ganesh Murti (Brass, 12 inch)', quantity: 1, price: 2499 },
+      { name: 'Ganesh Murti (Marble, 12 inch)', quantity: 1, price: 2499 },
       { name: 'Shivling (Marble, 8 inch)', quantity: 1, price: 1999 },
     ],
     total: 4498,
