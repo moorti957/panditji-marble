@@ -280,7 +280,7 @@ const cinzel = Cinzel({ subsets: ['latin'], variable: '--font-cinzel' });
 
 export const metadata: Metadata = {
   title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
-  description: 'Handcrafted marble, brass, and wood murtis by master artisans in Jaipur.',
+  description: 'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh.',
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
@@ -437,7 +437,7 @@ files["frontend/src/components/layout/Footer.tsx"] = `export default function Fo
   return (
     <footer className="bg-brown text-white/80 py-12">
       <div className="container grid grid-cols-1 md:grid-cols-4 gap-8">
-        <div><h4 className="font-cinzel text-lg">Pandit Ji Marble Murti Art</h4><p className="text-sm mt-2">Luxury marble and brass murtis handcrafted in Jaipur.</p></div>
+        <div><h4 className="font-cinzel text-lg">Pandit Ji Marble Murti Art</h4><p className="text-sm mt-2">Luxury marble and brass murtis handcrafted in govindgarh.</p></div>
         <div><h5>Quick Links</h5><ul className="text-sm space-y-1"><li><Link href="/about">About</Link></li><li><Link href="/products">Products</Link></li><li><Link href="/contact">Contact</Link></li></ul></div>
         <div><h5>Categories</h5><ul className="text-sm space-y-1"><li>Ganesh</li><li>Krishna</li><li>Shiva</li></ul></div>
         <div><h5>Contact</h5><ul className="text-sm space-y-1"><li>📞 +91 72403 64772</li><li>✉️ info@panditjimurti.com</li></ul></div>

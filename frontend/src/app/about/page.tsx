@@ -54,7 +54,7 @@ export default function AboutPage() {
 
   // Timeline events
   const timeline = [
-    { year: '1991', event: 'Founded by Pandit Ji in Jaipur, starting with a small workshop.' },
+    { year: '1991', event: 'Founded by Pandit Ji in govindgarh, starting with a small workshop.' },
     { year: '2005', event: 'Expanded to a larger facility, training the next generation of artisans.' },
     { year: '2015', event: 'Completed our 100th temple project – a milestone of divine craftsmanship.' },
     { year: '2025', event: 'Launched our online presence to share our art with the world.' },
@@ -93,7 +93,7 @@ export default function AboutPage() {
               <span className="text-gold">Since 1991</span>
             </h1>
             <p className="text-white/80 text-lg mt-4 max-w-xl">
-              From the heart of Jaipur, we bring you handcrafted murtis that embody 
+              From the heart of govindgarh, we bring you handcrafted murtis that embody 
               centuries of tradition, devotion, and artistic excellence.
             </p>
             <div className="flex flex-wrap gap-4 mt-8">
@@ -131,7 +131,7 @@ export default function AboutPage() {
               <div className="w-20 h-1 bg-gold/50 rounded-full mt-4" />
               <div className="space-y-4 text-brown-light leading-relaxed mt-6">
                 <p>
-                  Pandit Ji Marble Murti Arts began in the narrow lanes of Jaipur, 
+                  Pandit Ji Marble Murti Arts began in the narrow lanes of govindgarh, 
                   where a young artisan, Pandit Ji, started sculpting divine forms 
                   with his bare hands and unwavering faith.
                 </p>

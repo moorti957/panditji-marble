@@ -67,7 +67,7 @@ const mockOrders: Record<string, OrderDetails> = {
     status: 'shipped',
     orderDate: '2025-12-15',
     estimatedDelivery: '2025-12-22',
-    shippingAddress: '123, Murti Marg, Jaipur, Rajasthan 302001, India',
+    shippingAddress: '123, Murti Marg, govindgarh, Rajasthan 302001, India',
     trackingNumber: 'TRK123456789',
     carrier: 'DTDC Express',
     items: [
@@ -110,7 +110,7 @@ const mockOrders: Record<string, OrderDetails> = {
     status: 'delivered',
     orderDate: '2025-12-10',
     estimatedDelivery: '2025-12-17',
-    shippingAddress: '456, Temple Road, Jaipur, Rajasthan 302002, India',
+    shippingAddress: '456, Temple Road, govindgarh, Rajasthan 302002, India',
     trackingNumber: 'TRK987654321',
     carrier: 'Blue Dart',
     items: [
@@ -152,7 +152,7 @@ const mockOrders: Record<string, OrderDetails> = {
     status: 'cancelled',
     orderDate: '2025-11-28',
     estimatedDelivery: 'N/A',
-    shippingAddress: '789, Temple Street, Jaipur, Rajasthan 302003, India',
+    shippingAddress: '789, Temple Street, govindgarh, Rajasthan 302003, India',
     trackingNumber: undefined,
     carrier: undefined,
     items: [

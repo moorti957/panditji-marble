@@ -41,7 +41,7 @@ const SettingSchema = new Schema<ISetting>(
     storeName: { type: String, default: 'Pandit Ji Marble' },
     storeEmail: { type: String, default: 'support@panditjimarble.com' },
     storePhone: { type: String, default: '+91-9876543210' },
-    storeAddress: { type: String, default: 'Jaipur, Rajasthan, India' },
+    storeAddress: { type: String, default: 'govindgarh, Rajasthan, India' },
     currency: { type: String, default: 'INR' },
     taxRate: { type: Number, default: 18 },
     gstPercentage: { type: Number, default: 18 },

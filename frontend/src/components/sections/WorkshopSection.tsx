@@ -65,7 +65,7 @@ const defaultSteps: WorkshopStep[] = [
 // ============================================================
 export default function WorkshopSection({
   title = 'From Our Workshop to Your Home',
-  subtitle = 'Every murti is hand-sculpted in Jaipur using traditional techniques passed down through generations.',
+  subtitle = 'Every murti is hand-sculpted in govindgarh using traditional techniques passed down through generations.',
   tag = '✦ Behind the Art',
   imageSrc = workshopImage,
   imageAlt = 'Master artisan at work on a marble murti',

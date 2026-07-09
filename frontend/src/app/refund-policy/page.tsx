@@ -54,7 +54,7 @@ export default function RefundPolicyPage() {
               <p className="text-brown-light dark:text-ivory/70 text-sm leading-relaxed">
                 At Pandit Ji Marble Murti Arts, we take great pride in the quality and craftsmanship of
                 our handcrafted murtis. Each piece is created with devotion and care by our master artisans
-                in Jaipur. We want you to be completely satisfied with your purchase.
+                in govindgarh. We want you to be completely satisfied with your purchase.
               </p>
               <p className="text-brown-light dark:text-ivory/70 text-sm leading-relaxed mt-3">
                 If for any reason you are not satisfied with your purchase, we offer a fair and transparent

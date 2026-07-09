@@ -290,7 +290,7 @@ export default function Hero() {
               variants={itemVariants}
               className="text-base sm:text-lg text-brown-light dark:text-ivory/70 max-w-md leading-relaxed"
             >
-              Each sculpture is carved with devotion by master artisans in Jaipur,
+              Each sculpture is carved with devotion by master artisans in govindgarh,
               bringing divine energy into your home and temple.
             </motion.p>
 

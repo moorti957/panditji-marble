@@ -360,7 +360,7 @@ function StoreSettings({ register, errors }: any) {
           <Textarea
             {...register('storeAddress')}
             rows={3}
-            placeholder="123, Murti Marg, Jaipur, Rajasthan 302001, India"
+            placeholder="123, Murti Marg, govindgarh, Rajasthan 302001, India"
           />
         </div>
         <div className="mt-4">
@@ -370,7 +370,7 @@ function StoreSettings({ register, errors }: any) {
           <Textarea
             {...register('storeDescription')}
             rows={3}
-            placeholder="Luxury marble and brass murtis handcrafted by master artisans in Jaipur."
+            placeholder="Luxury marble and brass murtis handcrafted by master artisans in govindgarh."
           />
         </div>
       </GlassCard>
@@ -639,7 +639,7 @@ function ContactSettings({ register, errors }: any) {
             <Textarea
               {...register('contactAddress')}
               rows={3}
-              placeholder="123, Murti Marg, Jaipur, Rajasthan 302001, India"
+              placeholder="123, Murti Marg, govindgarh, Rajasthan 302001, India"
             />
           </div>
           <div>

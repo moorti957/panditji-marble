@@ -269,7 +269,7 @@ export default function PrivacyPolicyPage() {
                   <div className="mt-2 space-y-1 text-sm text-brown-light dark:text-ivory/70">
                     <p><strong>Email:</strong> <a href="mailto:info@panditjimurti.com" className="text-gold-dark dark:text-gold hover:text-gold transition-colors">info@panditjimurti.com</a></p>
                     <p><strong>Phone:</strong> <a href="tel:+917240364772" className="text-gold-dark dark:text-gold hover:text-gold transition-colors">+91 72403 64772</a></p>
-                    <p><strong>Address:</strong> 123, Murti Marg, Jaipur, Rajasthan 302001, India</p>
+                    <p><strong>Address:</strong> 123, Murti Marg, govindgarh, Rajasthan 302001, India</p>
                   </div>
                 </div>
                 <Link

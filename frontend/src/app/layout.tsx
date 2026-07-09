@@ -41,9 +41,9 @@ export const metadata: Metadata = {
     template: '%s | Pandit Ji Marble Murti Arts',
   },
   description:
-    'Handcrafted marble, brass, and wood murtis by master artisans in Jaipur. Bring divine energy into your home with our luxury sculptures.',
+    'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh. Bring divine energy into your home with our luxury sculptures.',
   keywords:
-    'murti, marble murti, brass murti, Ganesh murti, Radha Krishna, Shiva statue, Hanuman idol, religious sculptures, Jaipur handicrafts',
+    'murti, marble murti, brass murti, Ganesh murti, Radha Krishna, Shiva statue, Hanuman idol, religious sculptures, govindgarh handicrafts',
   authors: [{ name: 'Pandit Ji Marble Murti Arts' }],
   creator: 'Pandit Ji Marble Murti Arts',
   publisher: 'Pandit Ji Marble Murti Arts',
@@ -54,7 +54,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
     description:
-      'Handcrafted marble, brass, and wood murtis by master artisans in Jaipur.',
+      'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh.',
     url: 'https://panditjimurti.com',
     siteName: 'Pandit Ji Marble Murti Arts',
     images: [
@@ -72,7 +72,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
     description:
-      'Handcrafted marble, brass, and wood murtis by master artisans in Jaipur.',
+      'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh.',
     images: ['https://images.unsplash.com/photo-1584925906119-eaf7bbd206c3?w=1200&q=80'],
   },
   icons: {

@@ -197,7 +197,7 @@ export default async function BlogDetailPage({ params }: { params: Promise<{ slu
               {post.author}
             </h4>
             <p className="text-sm text-brown-light/80 mt-1">
-              Handcrafted with devotion since 1991. Sharing stories from the heart of Jaipur.
+              Handcrafted with devotion since 1991. Sharing stories from the heart of govindgarh.
             </p>
           </div>
         </div>

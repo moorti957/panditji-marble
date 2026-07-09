@@ -18,7 +18,7 @@ const faqData = [
     id: 'general-1',
     category: 'general',
     question: 'What type of murtis do you offer?',
-    answer: 'We offer a wide range of handcrafted murtis including Ganesh Ji, Radha Krishna, Shiv Ji, Hanuman Ji, Ram Darbar, Durga Maa, Kali Maa, Sai Baba, Vishnu, Lakshmi, Saraswati, and Marble Shivling. Each murti is crafted with devotion and precision by our master artisans in Jaipur.',
+    answer: 'We offer a wide range of handcrafted murtis including Ganesh Ji, Radha Krishna, Shiv Ji, Hanuman Ji, Ram Darbar, Durga Maa, Kali Maa, Sai Baba, Vishnu, Lakshmi, Saraswati, and Marble Shivling. Each murti is crafted with devotion and precision by our master artisans in govindgarh.',
   },
   {
     id: 'general-2',
