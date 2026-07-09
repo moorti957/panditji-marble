@@ -292,7 +292,7 @@ export default function ProductsPage() {
                       </div>
                     </td>
                     <td className="py-3 px-4 font-cinzel text-gold-dark dark:text-gold">
-                      ₹{formatPrice(product.price)}
+                      {formatPrice(product.price)}
                     </td>
                     <td className="py-3 px-4 text-black dark:text-black">
                       {product.stockQuantity ?? 0}

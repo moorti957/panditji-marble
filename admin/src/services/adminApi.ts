@@ -133,32 +133,78 @@ const normalizeProductList = (products: any[] = []) =>
 // Auth API
 // ============================================================
 export const authApi = {
-  login: async (email: string, password: string): Promise<{ user: any; accessToken: string }> => {
-    const response = await apiClient.post<ApiResponse<{ user: any; accessToken: string }>>('/auth/login', { email, password });
+  login: async (
+    email: string,
+    password: string
+  ): Promise<{ user: any; accessToken: string }> => {
+    console.log("========== LOGIN API ==========");
+
+    const response = await apiClient.post<
+      ApiResponse<{ user: any; accessToken: string }>
+    >("/auth/login", {
+      email,
+      password,
+    });
+
+    console.log("Login Response:", response.data);
+
     const data = extractData(response);
+
+    console.log("Access Token:", data.accessToken);
+    console.log("User:", data.user);
+
     if (data.accessToken) {
       setToken(data.accessToken);
+      console.log("✅ Token saved in LocalStorage");
+    } else {
+      console.log("❌ No access token received");
     }
+
+    console.log("===============================");
+
     return data;
   },
 
   logout: async (): Promise<void> => {
     try {
-      await apiClient.post('/auth/logout');
+      await apiClient.post("/auth/logout");
     } finally {
       removeToken();
+      console.log("✅ Token removed");
     }
   },
 
   getMe: async (): Promise<any> => {
-    const response = await apiClient.get<ApiResponse<any>>('/auth/me');
+    console.count("GET ME API");
+
+    const token = getToken();
+
+    console.log("========== GET ME ==========");
+    console.log("Stored Token:", token);
+
+    const response = await apiClient.get<ApiResponse<any>>("/auth/me");
+
+    console.log("GET ME Response:", response.data);
+    console.log("============================");
+
     return extractData(response);
   },
 
   refreshToken: async (): Promise<string> => {
-    const response = await apiClient.post<ApiResponse<{ accessToken: string }>>('/auth/refresh-token');
+    console.log("========== REFRESH TOKEN ==========");
+
+    const response = await apiClient.post<
+      ApiResponse<{ accessToken: string }>
+    >("/auth/refresh-token");
+
     const data = extractData(response);
+
+    console.log("New Token:", data.accessToken);
+
     setToken(data.accessToken);
+
+    console.log("===================================");
+
     return data.accessToken;
   },
 };
@@ -303,6 +349,24 @@ export const categoryApi = {
       totalPages: payload?.totalPages ?? 1,
     };
   },
+
+  uploadImage: async (formData: FormData): Promise<string[]> => {
+  const response = await apiClient.post<
+    ApiResponse<{ images: string[] }>
+  >(
+    "/products/upload-images",
+    formData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+
+  const payload = extractData(response);
+
+  return payload.images || [];
+},
 
   getCategoryTree: async (): Promise<any[]> => {
     const response = await apiClient.get<ApiResponse<any[]>>('/categories/tree');
@@ -760,6 +824,8 @@ export const adminApi: any = {
 
 // --- Flat convenience proxies for legacy callers ---
 // Categories
+(adminApi as any).uploadCategoryImage = (formData: FormData) =>
+  (adminApi as any).categories.uploadImage(formData);
 (adminApi as any).getCategories = (params?: any) => (adminApi as any).categories.getCategories(params);
 (adminApi as any).getCategory = (id: string) => (adminApi as any).categories.getCategory(id);
 (adminApi as any).createCategory = (data: any) => (adminApi as any).categories.createCategory(data);

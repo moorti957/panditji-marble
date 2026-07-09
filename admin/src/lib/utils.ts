@@ -25,7 +25,7 @@ export function cn(...inputs: ClassValue[]): string {
 // ============================================================
 
 /**
- * Format a number as Indian Rupees (₹)
+ * Format a number as Indian Rupees ()
  * 
  * @param amount - The amount to format
  * @param options - Intl.NumberFormat options
@@ -33,15 +33,15 @@ export function cn(...inputs: ClassValue[]): string {
  * 
  * @example
  * ```ts
- * formatPrice(2499) // '₹2,499'
- * formatPrice(1000000) // '₹10,00,000'
+ * formatPrice(2499) // '2,499'
+ * formatPrice(1000000) // '10,00,000'
  * ```
  */
 export function formatPrice(
   amount: number,
   options: Intl.NumberFormatOptions = {}
 ): string {
-  if (isNaN(amount) || !isFinite(amount)) return '₹0';
+  if (isNaN(amount) || !isFinite(amount)) return '0';
   return new Intl.NumberFormat('en-IN', {
     style: 'currency',
     currency: 'INR',

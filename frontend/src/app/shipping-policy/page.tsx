@@ -147,14 +147,14 @@ export default function ShippingPolicyPage() {
                         <strong>Standard (Domestic)</strong>
                       </td>
                       <td className="py-2">5-7 business days</td>
-                      <td className="py-2">₹{standardShippingCost === 0 ? '0' : standardShippingCost} (Free above ₹{freeShippingThreshold})</td>
+                      <td className="py-2">{standardShippingCost === 0 ? '0' : standardShippingCost} (Free above {freeShippingThreshold})</td>
                     </tr>
                     <tr className="border-b border-gold/5 dark:border-gold/5">
                       <td className="py-2">
                         <strong>Express (Domestic)</strong>
                       </td>
                       <td className="py-2">2-3 business days</td>
-                      <td className="py-2">₹{expressShippingCost}</td>
+                      <td className="py-2">{expressShippingCost}</td>
                     </tr>
                     <tr className="border-b border-gold/5 dark:border-gold/5">
                       <td className="py-2">
@@ -214,14 +214,14 @@ export default function ShippingPolicyPage() {
               </p>
               <ul className="list-disc list-inside text-brown-light dark:text-ivory/70 text-sm mt-3 space-y-1.5 ml-4">
                 <li>
-                  <strong>Domestic (India):</strong> Standard shipping is ₹{standardShippingCost} and becomes free above ₹{freeShippingThreshold}.
+                  <strong>Domestic (India):</strong> Standard shipping is {standardShippingCost} and becomes free above {freeShippingThreshold}.
                 </li>
                 <li>
                   <strong>International:</strong> Shipping costs are calculated at checkout based on your
                   location and the weight of the package.
                 </li>
                 <li>
-                  <strong>Express Shipping:</strong> Express delivery is available for ₹{expressShippingCost}.
+                  <strong>Express Shipping:</strong> Express delivery is available for {expressShippingCost}.
                 </li>
               </ul>
               <p className="text-brown-light dark:text-ivory/70 text-sm mt-3">

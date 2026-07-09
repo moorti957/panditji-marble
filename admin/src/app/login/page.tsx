@@ -36,6 +36,7 @@ export default function AdminLoginPage() {
 
   // Redirect if already authenticated
   useEffect(() => {
+      console.count("LOAD USER");
   if (
     isAuthenticated &&
     (user?.role === 'admin' || user?.role === 'super-admin')

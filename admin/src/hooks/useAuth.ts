@@ -20,20 +20,27 @@ export function useAuth() {
   const [user, setUser] = useState<AuthUser | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const loadUser = async () => {
-      try {
-        const me = await authApi.getMe();
-        setUser(me);
-      } catch {
-        setUser(null);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+ useEffect(() => {
+  const token = localStorage.getItem("panditji-admin-token");
 
-    loadUser();
-  }, []);
+  if (!token) {
+    setIsLoading(false);
+    return;
+  }
+
+  const loadUser = async () => {
+    try {
+      const me = await authApi.getMe();
+      setUser(me);
+    } catch {
+      setUser(null);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  loadUser();
+}, []);
 
  const login = async (
   email: string,

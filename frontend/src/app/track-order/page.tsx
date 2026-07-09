@@ -470,7 +470,7 @@ export default function TrackOrderPage() {
                       <div className="text-right">
                         <p className="text-sm text-brown-light dark:text-ivory/60">Total Amount</p>
                         <p className="font-cinzel text-2xl font-bold text-gold-dark dark:text-gold">
-                          ₹{orderDetails.total.toLocaleString('en-IN')}
+                          {orderDetails.total.toLocaleString('en-IN')}
                         </p>
                       </div>
                     </div>
@@ -544,14 +544,14 @@ export default function TrackOrderPage() {
                             </p>
                           </div>
                           <p className="font-cinzel text-sm text-gold-dark dark:text-gold">
-                            ₹{item.price.toLocaleString('en-IN')}
+                            {item.price.toLocaleString('en-IN')}
                           </p>
                         </div>
                       ))}
                     </div>
                     <div className="flex justify-end pt-3 mt-3 border-t border-gold/10">
                       <p className="font-cinzel text-base font-bold text-gold-dark dark:text-gold">
-                        Total: ₹{orderDetails.total.toLocaleString('en-IN')}
+                        Total: {orderDetails.total.toLocaleString('en-IN')}
                       </p>
                     </div>
                   </GlassCard>

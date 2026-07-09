@@ -69,12 +69,12 @@ export default function MobileNavbar() {
 
   // Quick categories
   const quickCategories = [
-    { name: 'Ganesh Ji', href: '/products?category=ganesh', icon: '🐘' },
-    { name: 'Radha Krishna', href: '/products?category=krishna', icon: '🪈' },
-    { name: 'Shiv Ji', href: '/products?category=shiv', icon: '🔱' },
-    { name: 'Hanuman Ji', href: '/products?category=hanuman', icon: '🙏' },
-    { name: 'Ram Darbar', href: '/products?category=ram', icon: '🏹' },
-    { name: 'Durga Maa', href: '/products?category=durga', icon: '⚔️' },
+    { name: 'Ganesh Ji', href: '/products?category=ganesh' },
+    { name: 'Radha Krishna', href: '/products?category=krishna' },
+    { name: 'Shiv Ji', href: '/products?category=shiv' },
+    { name: 'Hanuman Ji', href: '/products?category=hanuman' },
+    { name: 'Ram Darbar', href: '/products?category=ram' },
+    { name: 'Durga Maa', href: '/products?category=durga' },
   ];
 
   // Profile links (when logged in)
@@ -388,7 +388,9 @@ export default function MobileNavbar() {
                             onClick={() => setIsOpen(false)}
                             className="flex items-center gap-2 px-3 py-2.5 rounded-xl hover:bg-gold/5 transition-colors text-sm text-brown-light dark:text-ivory/70"
                           >
-                            <span>{cat.icon}</span>
+                            <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gold/10 text-xs font-semibold text-gold-dark">
+                              {cat.name.charAt(0).toUpperCase()}
+                            </span>
                             <span>{cat.name}</span>
                           </Link>
                         </motion.div>

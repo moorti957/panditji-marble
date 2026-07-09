@@ -409,7 +409,7 @@ const onError = (errors: any) => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
                 <label className="block text-sm font-medium text-black dark:text-black mb-1">
-                  Price * (₹)
+                  Price * ()
                 </label>
                 <Input
                   {...register('price', { valueAsNumber: true })}
@@ -423,7 +423,7 @@ const onError = (errors: any) => {
               </div>
               <div>
                 <label className="block text-sm font-medium text-black dark:text-black mb-1">
-                  Original Price (₹)
+                  Original Price ()
                 </label>
                 <Input
                   {...register('originalPrice', { valueAsNumber: true })}

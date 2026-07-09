@@ -117,8 +117,10 @@ export default function CategoriesPage() {
                     sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                   />
                 ) : (
-                  <div className="w-full h-full flex items-center justify-center text-6xl opacity-20">
-                    🕉️
+                  <div className="w-full h-full flex items-center justify-center bg-gold/5">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white/80 text-2xl font-semibold text-gold-dark shadow-sm">
+                      {category.name.charAt(0).toUpperCase()}
+                    </div>
                   </div>
                 )}
                 {/* Gradient overlay on hover */}
@@ -197,8 +199,10 @@ export default function CategoriesPage() {
                           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
                         />
                       ) : (
-                        <div className="w-full h-full flex items-center justify-center text-5xl opacity-10">
-                          🕉️
+                        <div className="w-full h-full flex items-center justify-center bg-gold/5">
+                          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-white/80 text-xl font-semibold text-gold-dark shadow-sm">
+                            {category.name.charAt(0).toUpperCase()}
+                          </div>
                         </div>
                       )}
                     </div>

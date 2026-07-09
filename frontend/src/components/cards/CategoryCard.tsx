@@ -43,7 +43,7 @@ export function CategoryCard({
   const [isHovered, setIsHovered] = useState(false);
   const [imageLoaded, setImageLoaded] = useState(false);
 
-  const { name, slug, image, icon, description, productCount, isFeatured } = category;
+  const { name, slug, image, description, productCount, isFeatured } = category;
 
   // Card variants
   const cardVariants: Variants = {
@@ -55,34 +55,7 @@ export function CategoryCard({
     },
   };
 
-  // Icon mapping for categories without images
-  const getDefaultIcon = (categoryName: string) => {
-    const iconMap: Record<string, string> = {
-      'Ganesh': '🐘',
-      'Ganesh Ji': '🐘',
-      'Radha Krishna': '🪈',
-      'Krishna': '🪈',
-      'Shiv': '🔱',
-      'Shiva': '🔱',
-      'Shiv Ji': '🔱',
-      'Hanuman': '🙏',
-      'Hanuman Ji': '🙏',
-      'Ram': '🏹',
-      'Ram Darbar': '🏹',
-      'Durga': '⚔️',
-      'Durga Maa': '⚔️',
-      'Kali': '🌙',
-      'Kali Maa': '🌙',
-      'Sai Baba': '✨',
-      'Vishnu': '🐚',
-      'Lakshmi': '💰',
-      'Saraswati': '🎵',
-      'Shivling': '🕉️',
-    };
-    return iconMap[categoryName] || '🕉️';
-  };
-
-  const displayIcon = icon || getDefaultIcon(name);
+  const fallbackImage = '/images/category-placeholder.svg';
 
   // Compact variant (smaller, used in sidebars or quick links)
   if (variant === 'compact') {
@@ -94,7 +67,9 @@ export function CategoryCard({
           className
         )}
       >
-        <span className="text-xl">{displayIcon}</span>
+        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/10 text-xs font-semibold text-gold-dark">
+          {name.charAt(0).toUpperCase()}
+        </div>
         <span className="text-sm font-medium text-brown dark:text-ivory/80 group-hover:text-gold-dark dark:group-hover:text-gold transition-colors">
           {name}
         </span>
@@ -138,9 +113,13 @@ export function CategoryCard({
                 onLoad={() => setImageLoaded(true)}
               />
             ) : (
-              <div className="w-full h-full flex items-center justify-center text-7xl opacity-20 bg-gold/5">
-                {displayIcon}
-              </div>
+              <Image
+                src={fallbackImage}
+                alt={name}
+                fill
+                className="object-cover opacity-70"
+                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+              />
             )}
 
             {/* Gradient overlay */}
@@ -157,7 +136,9 @@ export function CategoryCard({
             {/* Content overlay */}
             <div className="absolute bottom-0 left-0 right-0 p-6">
               <div className="flex items-center gap-2 mb-1">
-                <span className="text-2xl">{displayIcon}</span>
+                <div className="flex h-9 w-9 items-center justify-center rounded-full bg-white/20 text-sm font-semibold text-white backdrop-blur">
+                  {name.charAt(0).toUpperCase()}
+                </div>
                 <h3 className="font-cinzel text-xl font-bold text-white group-hover:text-gold-light transition-colors">
                   {name}
                 </h3>
@@ -215,9 +196,13 @@ export function CategoryCard({
               onLoad={() => setImageLoaded(true)}
             />
           ) : (
-            <div className="w-full h-full flex items-center justify-center text-8xl opacity-10 bg-gold/5 group-hover:scale-110 transition-transform duration-700">
-              {displayIcon}
-            </div>
+            <Image
+              src={fallbackImage}
+              alt={name}
+              fill
+              className="object-cover opacity-70 group-hover:scale-110 transition-transform duration-700"
+              sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            />
           )}
 
           {/* Hover overlay */}
@@ -228,15 +213,15 @@ export function CategoryCard({
             )}
           />
 
-          {/* Icon overlay (on hover) */}
+          {/* Overlay badge */}
           <div
             className={cn(
               'absolute inset-0 flex items-center justify-center transition-opacity duration-300',
               isHovered ? 'opacity-100' : 'opacity-0'
             )}
           >
-            <div className="bg-white/90 dark:bg-brown-dark/90 backdrop-blur rounded-full p-4 shadow-xl">
-              <span className="text-4xl">{displayIcon}</span>
+            <div className="bg-white/90 dark:bg-brown-dark/90 backdrop-blur rounded-full p-4 shadow-xl text-2xl font-semibold text-brown dark:text-ivory">
+              {name.charAt(0).toUpperCase()}
             </div>
           </div>
 
@@ -258,7 +243,9 @@ export function CategoryCard({
         {/* Content */}
         <div className="p-4 text-center">
           <div className="flex items-center justify-center gap-2">
-            <span className="text-lg">{displayIcon}</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gold/10 text-sm font-semibold text-gold-dark">
+              {name.charAt(0).toUpperCase()}
+            </div>
             <h3 className="font-cinzel text-base font-semibold text-brown dark:text-ivory group-hover:text-gold-dark dark:group-hover:text-gold transition-colors">
               {name}
             </h3>

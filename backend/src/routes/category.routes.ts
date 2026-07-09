@@ -30,41 +30,128 @@ const categorySlugParamValidation = [
 ];
 
 const createCategoryValidation = [
-  body('name').notEmpty().withMessage('Category name is required').trim().isLength({ min: 2, max: 50 }),
-  body('slug').optional().isSlug().withMessage('Slug must be URL-friendly'),
-  body('description').optional().trim().isLength({ max: 500 }),
-  body('icon').optional().trim().isString(),
-  body('image').optional().isURL().withMessage('Image must be a valid URL'),
-  body('parentId').optional().isMongoId().withMessage('Invalid parent ID'),
-  body('displayOrder').optional().isInt({ min: 0 }),
-  body('isActive').optional().isBoolean(),
-  body('isFeatured').optional().isBoolean(),
-  body('seo').optional().isObject(),
-  body('seo.title').optional().trim(),
-  body('seo.description').optional().trim(),
+  body('name')
+    .notEmpty()
+    .withMessage('Category name is required')
+    .trim()
+    .isLength({ min: 2, max: 50 }),
+
+  body('slug')
+    .optional({ checkFalsy: true })
+    .isSlug()
+    .withMessage('Slug must be URL-friendly'),
+
+  body('description')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 500 }),
+
+  body('image')
+    .optional({ checkFalsy: true })
+    .isURL()
+    .withMessage('Image must be a valid URL'),
+
+  body('parentId')
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage('Invalid parent ID'),
+
+  body('displayOrder')
+    .optional()
+    .isInt({ min: 0 }),
+
+  body('isActive')
+    .optional()
+    .isBoolean(),
+
+  body('isFeatured')
+    .optional()
+    .isBoolean(),
+
+  body('seo')
+    .optional()
+    .isObject(),
+
+  body('seo.title')
+    .optional({ checkFalsy: true })
+    .trim(),
+
+  body('seo.description')
+    .optional({ checkFalsy: true })
+    .trim(),
 ];
 
 const updateCategoryValidation = [
-  param('id').isMongoId().withMessage('Invalid category ID'),
-  body('name').optional().trim().isLength({ min: 2, max: 50 }),
-  body('slug').optional().isSlug(),
-  body('description').optional().trim().isLength({ max: 500 }),
-  body('icon').optional().trim(),
-  body('image').optional().isURL(),
-  body('parentId').optional().isMongoId(),
-  body('displayOrder').optional().isInt({ min: 0 }),
-  body('isActive').optional().isBoolean(),
-  body('isFeatured').optional().isBoolean(),
-  body('seo').optional().isObject(),
-  body('seo.title').optional().trim(),
-  body('seo.description').optional().trim(),
+  param('id')
+    .isMongoId()
+    .withMessage('Invalid category ID'),
+
+  body('name')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ min: 2, max: 50 }),
+
+  body('slug')
+    .optional({ checkFalsy: true })
+    .isSlug()
+    .withMessage('Slug must be URL-friendly'),
+
+  body('description')
+    .optional({ checkFalsy: true })
+    .trim()
+    .isLength({ max: 500 }),
+
+  body('image')
+    .optional({ checkFalsy: true })
+    .isURL()
+    .withMessage('Image must be a valid URL'),
+
+  body('parentId')
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage('Invalid parent ID'),
+
+  body('displayOrder')
+    .optional()
+    .isInt({ min: 0 }),
+
+  body('isActive')
+    .optional()
+    .isBoolean(),
+
+  body('isFeatured')
+    .optional()
+    .isBoolean(),
+
+  body('seo')
+    .optional()
+    .isObject(),
+
+  body('seo.title')
+    .optional({ checkFalsy: true })
+    .trim(),
+
+  body('seo.description')
+    .optional({ checkFalsy: true })
+    .trim(),
 ];
 
 const categoryProductQueryValidation = [
-  param('slug').notEmpty().withMessage('Category slug is required'),
-  query('page').optional().isInt({ min: 1 }),
-  query('limit').optional().isInt({ min: 1, max: 100 }),
-  query('sort').optional().isIn(['price-asc', 'price-desc', 'newest', 'popular']),
+  param('slug')
+    .notEmpty()
+    .withMessage('Category slug is required'),
+
+  query('page')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 1 }),
+
+  query('limit')
+    .optional({ checkFalsy: true })
+    .isInt({ min: 1, max: 100 }),
+
+  query('sort')
+    .optional({ checkFalsy: true })
+    .isIn(['price-asc', 'price-desc', 'newest', 'popular']),
 ];
 
 // ============================================================
@@ -74,12 +161,29 @@ const categoryProductQueryValidation = [
 // Get all categories with optional filters
 router.get(
   '/',
-  query('parentId').optional().isMongoId(),
-  query('isActive').optional().isBoolean(),
-  query('isFeatured').optional().isBoolean(),
-  query('search').optional().trim(),
-  query('limit').optional().isInt({ min: 1, max: 100 }),
-  query('page').optional().isInt({ min: 1 }),
+  query('parentId')
+    .optional({ checkFalsy: true })
+    .isMongoId()
+    .withMessage('Invalid parent ID'),
+ query('isActive')
+  .optional({ checkFalsy: true })
+  .isBoolean(),
+
+query('isFeatured')
+  .optional({ checkFalsy: true })
+  .isBoolean(),
+
+query('search')
+  .optional({ checkFalsy: true })
+  .trim(),
+
+query('limit')
+  .optional({ checkFalsy: true })
+  .isInt({ min: 1, max: 999 }),
+
+query('page')
+  .optional({ checkFalsy: true })
+  .isInt({ min: 1 }),
   validate,
   CategoryController.getAll
 );

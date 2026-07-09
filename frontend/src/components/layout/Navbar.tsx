@@ -58,14 +58,14 @@ export default function Navbar() {
   ];
 
   const megaMenuCategories = [
-    { name: 'Ganesh Ji', href: '/products?category=ganesh', icon: '🐘' },
-    { name: 'Radha Krishna', href: '/products?category=krishna', icon: '🪈' },
-    { name: 'Hanuman Ji', href: '/products?category=hanuman', icon: '🙏' },
-    { name: 'Shiv Ji', href: '/products?category=shiv', icon: '🔱' },
-    { name: 'Ram Darbar', href: '/products?category=ram', icon: '🏹' },
-    { name: 'Sai Baba', href: '/products?category=sai', icon: '✨' },
-    { name: 'Kali Maa', href: '/products?category=kali', icon: '🌙' },
-    { name: 'Lakshmi', href: '/products?category=lakshmi', icon: '💰' },
+    { name: 'Ganesh Ji', href: '/products?category=ganesh' },
+    { name: 'Radha Krishna', href: '/products?category=krishna' },
+    { name: 'Hanuman Ji', href: '/products?category=hanuman' },
+    { name: 'Shiv Ji', href: '/products?category=shiv' },
+    { name: 'Ram Darbar', href: '/products?category=ram' },
+    { name: 'Sai Baba', href: '/products?category=sai' },
+    { name: 'Kali Maa', href: '/products?category=kali' },
+    { name: 'Lakshmi', href: '/products?category=lakshmi' },
   ];
 
   const profileItems = [
@@ -463,7 +463,9 @@ export default function Navbar() {
                         onClick={handleNavItemClick}
                         className="flex items-center gap-2 rounded-xl border border-gold/10 bg-white/70 px-2.5 py-2 text-sm text-brown transition-colors hover:bg-gold/10 dark:bg-brown/50 dark:text-ivory/80"
                       >
-                        <span>{category.icon}</span>
+                        <span className="flex h-7 w-7 items-center justify-center rounded-full bg-gold/10 text-xs font-semibold text-gold-dark">
+                          {category.name.charAt(0).toUpperCase()}
+                        </span>
                         <span className="truncate">{category.name}</span>
                       </Link>
                     ))}

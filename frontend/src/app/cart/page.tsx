@@ -217,11 +217,11 @@ export default function CartPage() {
                     </p>
                     <div className="flex items-center gap-3 mt-1">
                       <span className="font-cinzel text-lg text-gold-dark">
-                        ₹{formatPrice(item.product.price)}
+                        {formatPrice(item.product.price)}
                       </span>
                       {item.product.originalPrice && (
                         <span className="text-xs text-brown-light line-through">
-                          ₹{formatPrice(item.product.originalPrice)}
+                          {formatPrice(item.product.originalPrice)}
                         </span>
                       )}
                     </div>
@@ -264,7 +264,7 @@ export default function CartPage() {
                   {/* Subtotal (desktop) */}
                   <div className="hidden md:flex flex-col items-end justify-between">
                     <span className="font-cinzel text-sm font-medium text-brown">
-                      ₹{formatPrice(item.product.price * item.quantity)}
+                      {formatPrice(item.product.price * item.quantity)}
                     </span>
                   </div>
                 </div>
@@ -390,7 +390,7 @@ export default function CartPage() {
               </div>
               <div className="flex items-center gap-1.5">
                 <Truck className="w-3.5 h-3.5 text-gold" />
-                <span>Free Shipping over ₹5,000</span>
+                <span>Free Shipping over 5,000</span>
               </div>
               <div className="flex items-center gap-1.5 col-span-2">
                 <Gift className="w-3.5 h-3.5 text-gold" />

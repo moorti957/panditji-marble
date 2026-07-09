@@ -37,7 +37,7 @@ export interface RevenueChartProps {
   className?: string;
   /** Height of the chart (default: 260) */
   height?: number;
-  /** Currency symbol (default: ₹) */
+  /** Currency symbol (default: ) */
   currencySymbol?: string;
   /** Whether to show the order count overlay */
   showOrders?: boolean;
@@ -101,7 +101,7 @@ export function RevenueChart({
   error = null,
   className,
   height = 260,
-  currencySymbol = '₹',
+  currencySymbol = '',
   showOrders = true,
 }: RevenueChartProps) {
   // Period options

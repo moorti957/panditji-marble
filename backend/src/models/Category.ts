@@ -18,7 +18,6 @@ export interface ICategory extends Document {
   name: string;
   slug: string;
   description?: string;
-  icon?: string;
   image?: string;
   parentId?: mongoose.Types.ObjectId | null;
   ancestors?: mongoose.Types.ObjectId[];
@@ -79,10 +78,6 @@ const CategorySchema = new Schema<ICategory>(
       type: String,
       trim: true,
       maxlength: 500,
-    },
-    icon: {
-      type: String,
-      trim: true,
     },
     image: {
       type: String,

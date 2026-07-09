@@ -569,7 +569,7 @@ export const columnHelpers = {
   currency: <T,>(
     key: keyof T,
     label: string,
-    currency: string = '₹',
+    currency: string = '',
     options?: Partial<DataTableColumn<T>>
   ): DataTableColumn<T> => ({
     accessorKey: key as string,

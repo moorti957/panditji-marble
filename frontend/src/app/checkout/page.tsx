@@ -632,7 +632,7 @@ export default function CheckoutPage() {
                       </div>
                       <p className="text-sm text-brown-light/70">Delivery in 5-7 business days</p>
                     </div>
-                    <span className="font-cinzel text-gold-dark">₹299</span>
+                    <span className="font-cinzel text-gold-dark">299</span>
                   </label>
 
                   <label className="flex items-center gap-4 p-4 border rounded-xl cursor-pointer hover:bg-sand/20 transition-colors has-[:checked]:border-gold has-[:checked]:bg-gold/5">
@@ -649,7 +649,7 @@ export default function CheckoutPage() {
                       </div>
                       <p className="text-sm text-brown-light/70">Delivery in 2-3 business days</p>
                     </div>
-                    <span className="font-cinzel text-gold-dark">₹{shippingCost}</span>
+                    <span className="font-cinzel text-gold-dark">{shippingCost}</span>
                   </label>
                   {errors.shipping?.shippingMethod && (
                     <p className="text-xs text-red-500 mt-1">
@@ -704,7 +704,7 @@ export default function CheckoutPage() {
                     <div className="rounded-xl border border-gold/20 bg-gold/5 p-4 text-sm text-brown-light">
                       <p className="font-medium text-brown">COD advance payment</p>
                       <p className="mt-1">
-                        A secure advance of ₹{formatPrice(advanceAmount)} ({advancePercent}%) is collected online for this order. The remaining balance will be paid on delivery.
+                        A secure advance of {formatPrice(advanceAmount)} ({advancePercent}%) is collected online for this order. The remaining balance will be paid on delivery.
                       </p>
                     </div>
                   )}

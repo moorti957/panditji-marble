@@ -197,8 +197,8 @@ const [filters, setFilters] = useState<ProductFilters>({
             className="mb-2"
           />
           <div className="flex justify-between text-xs text-brown-light">
-            <span>₹{filters.minPrice}</span>
-            <span>₹{filters.maxPrice}</span>
+            <span>{filters.minPrice}</span>
+            <span>{filters.maxPrice}</span>
           </div>
         </div>
       </div>

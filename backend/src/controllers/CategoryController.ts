@@ -285,8 +285,8 @@ export class CategoryController {
    */
   static async create(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const categoryData = req.body;
-
+      const { icon, ...categoryData } = req.body;
+      console.log('CATEGORY BODY =>', categoryData);
       // Generate slug if not provided
       if (!categoryData.slug) {
         categoryData.slug = categoryData.name
@@ -338,7 +338,7 @@ export class CategoryController {
   static async update(req: AuthRequest, res: Response): Promise<Response> {
     try {
       const { id } = req.params;
-      const updates = req.body;
+      const { icon, ...updates } = req.body;
 
       const category = await Category.findById(id);
       if (!category) {

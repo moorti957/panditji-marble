@@ -56,7 +56,7 @@ export default function AdminDashboard() {
     {
       title: 'Total Revenue',
       value: stats?.totalRevenue || 0,
-      formatted: `₹${formatPrice(stats?.totalRevenue || 0)}`,
+      formatted: `${formatPrice(stats?.totalRevenue || 0)}`,
       change: stats?.revenueChange || 0,
       icon: DollarSign,
       color: 'bg-green-500',
@@ -90,11 +90,13 @@ export default function AdminDashboard() {
 
   // Status badge colors
   const statusColors: Record<string, string> = {
-    pending: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400',
-    processing: 'bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400',
-    shipped: 'bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400',
-    delivered: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400',
-    cancelled: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400',
+     pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  processing: "bg-blue-100 text-blue-800 border-blue-200",
+  shipped: "bg-purple-100 text-purple-800 border-purple-200",
+  delivered: "bg-green-100 text-green-800 border-green-200",
+  cancelled: "bg-red-100 text-red-800 border-red-200",
+  completed: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  refunded: "bg-gray-100 text-gray-800 border-gray-200",
   };
 
   const statusLabels: Record<string, string> = {
@@ -355,15 +357,23 @@ export default function AdminDashboard() {
                       {formatDate(order.createdAt)}
                     </td>
                     <td className="py-3 font-cinzel text-gold-dark dark:text-gold">
-                      ₹{formatPrice(order.grandTotal)}
+                      {formatPrice(order.grandTotal)}
                     </td>
-                    <td className="py-3">
-                      <span
-                        className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${statusColors[order.status] || statusColors.pending}`}
-                      >
-                        {statusLabels[order.status] || order.status}
-                      </span>
-                    </td>
+                   <td className="py-3">
+  {(() => {
+    const status = (order.status || "pending").toLowerCase();
+
+    return (
+      <span
+        className={`inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold border transition-colors ${
+          statusColors[status] || "bg-yellow-100 text-yellow-800 border-yellow-200"
+        }`}
+      >
+        {statusLabels[status] || status}
+      </span>
+    );
+  })()}
+</td>
                     <td className="py-3 text-right">
                       <Link
                         href={`/orders/${order.id}`}

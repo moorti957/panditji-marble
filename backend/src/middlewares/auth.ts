@@ -93,75 +93,113 @@ export const auth = async (
   next: NextFunction
 ): Promise<void> => {
   try {
+    console.log("\n========== AUTH MIDDLEWARE ==========");
+
     const token = getToken(req);
 
+    console.log("Authorization Header:", req.headers.authorization);
+    console.log("Extracted Token:", token);
+    console.log("JWT_SECRET Exists:", !!process.env.JWT_SECRET);
+
     if (!token) {
+      console.log("❌ No token received");
+
       res.status(401).json({
         success: false,
-        message: 'Authentication required. Please provide a valid token.',
+        message: "Authentication required. Please provide a valid token.",
       });
       return;
     }
 
-    // Verify token
+    // Verify Token
     let decoded: DecodedToken;
+
     try {
-      decoded = jwt.verify(token, process.env.JWT_SECRET!) as DecodedToken;
-    } catch (error) {
+      decoded = jwt.verify(
+        token,
+        process.env.JWT_SECRET!
+      ) as DecodedToken;
+
+      console.log("✅ Decoded Token:", decoded);
+    } catch (error: any) {
+      console.log("❌ JWT VERIFY ERROR:", error.name);
+      console.log("❌ JWT MESSAGE:", error.message);
+
       if (error instanceof jwt.TokenExpiredError) {
         res.status(401).json({
           success: false,
-          message: 'Token has expired. Please login again.',
-          code: 'TOKEN_EXPIRED',
+          message: "Token has expired. Please login again.",
+          code: "TOKEN_EXPIRED",
         });
         return;
       }
+
       if (error instanceof jwt.JsonWebTokenError) {
         res.status(401).json({
           success: false,
-          message: 'Invalid token. Please provide a valid token.',
-          code: 'INVALID_TOKEN',
+          message: "Invalid token. Please provide a valid token.",
+          code: "INVALID_TOKEN",
         });
         return;
       }
+
       res.status(401).json({
         success: false,
-        message: 'Authentication failed. Please try again.',
+        message: "Authentication failed. Please try again.",
       });
       return;
     }
 
-    // Find user
-    const user = await User.findById(decoded.id)
-      .select('-password -resetPasswordToken -resetPasswordExpires -verificationToken -verificationTokenExpires');
+    console.log("Searching User ID:", decoded.id);
+
+    const user = await User.findById(decoded.id).select(
+      "-password -resetPasswordToken -resetPasswordExpires -verificationToken -verificationTokenExpires"
+    );
 
     if (!user) {
+      console.log("❌ User Not Found");
+
       res.status(401).json({
         success: false,
-        message: 'User not found. Please login again.',
+        message: "User not found. Please login again.",
       });
       return;
     }
 
-    // Check if user is active
+    console.log("✅ User Found:");
+    console.log({
+      id: user._id,
+      email: user.email,
+      role: user.role,
+      isActive: user.isActive,
+    });
+
     if (!user.isActive) {
+      console.log("❌ User Inactive");
+
       res.status(403).json({
         success: false,
-        message: 'Account is deactivated. Please contact support.',
+        message: "Account is deactivated. Please contact support.",
       });
       return;
     }
 
-    // Attach user and token to request
     req.user = user;
     req.token = token;
 
+    console.log("✅ Auth Success");
+    console.log("=====================================\n");
+
     next();
   } catch (error) {
-    logger.error('Auth middleware error:', error);
+    console.error("❌ AUTH MIDDLEWARE ERROR");
+    console.error(error);
+
+    logger.error("Auth middleware error:", error);
+
     res.status(500).json({
       success: false,
-      message: 'Internal server error during authentication.',
+      message: "Internal server error during authentication.",
     });
   }
 };

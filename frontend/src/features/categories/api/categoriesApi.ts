@@ -18,6 +18,23 @@ interface ApiResponse<T> {
   message?: string;
 }
 
+const normalizeCategory = (category: any): Category => ({
+  ...category,
+  id: category?._id || category?.id || '',
+  slug: category?.slug || '',
+  name: category?.name || '',
+  description: category?.description || '',
+  image: category?.image || '',
+  productCount: category?.productCount ?? 0,
+  isFeatured: category?.isFeatured ?? false,
+  isActive: category?.isActive ?? true,
+});
+
+const normalizeCategoryTree = (category: any): Category => ({
+  ...normalizeCategory(category),
+  children: (category?.children || []).map(normalizeCategoryTree),
+});
+
 // ============================================================
 // Categories API
 // ============================================================
@@ -50,7 +67,12 @@ export const categoriesApi = {
     const response =
       await apiClient.get<ApiResponse<CategoryListResponse>>(url);
 
-    return response.data.data;
+    const payload = response.data.data;
+
+    return {
+      ...payload,
+      categories: (payload.categories || []).map(normalizeCategory),
+    };
   },
 
   /**
@@ -62,7 +84,7 @@ export const categoriesApi = {
         `/categories/id/${id}`
       );
 
-    return response.data.data;
+    return normalizeCategory(response.data.data);
   },
 
   /**
@@ -74,7 +96,7 @@ export const categoriesApi = {
         `/categories/${slug}`
       );
 
-    return response.data.data;
+    return normalizeCategory(response.data.data);
   },
 
   /**
@@ -88,7 +110,7 @@ export const categoriesApi = {
         `/categories/featured?limit=${limit}`
       );
 
-    return response.data.data;
+    return (response.data.data || []).map(normalizeCategory);
   },
 
   /**
@@ -100,7 +122,7 @@ export const categoriesApi = {
         '/categories/tree'
       );
 
-    return response.data.data;
+    return (response.data.data || []).map(normalizeCategoryTree);
   },
 
   /**

@@ -196,7 +196,7 @@ const VALID_COUPONS: Record<string, AppliedCoupon> = {
     code: 'FREESHIP',
     discountType: 'fixed',
     discountValue: 500,
-    description: '₹500 off on shipping',
+    description: '500 off on shipping',
   },
   'MARBLE10': {
     code: 'MARBLE10',
@@ -548,7 +548,7 @@ export function getCartSummary(state: CartState): string {
     .map((item) => `${item.product.name} x${item.quantity}`)
     .join(', ');
   
-  return `🛒 ${state.items.length} items · ₹${state.subtotal.toLocaleString('en-IN')}`;
+  return `🛒 ${state.items.length} items · ${state.subtotal.toLocaleString('en-IN')}`;
 }
 
 /**

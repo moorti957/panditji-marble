@@ -380,10 +380,7 @@ useEffect(() => {
                 <Shield className="w-4 h-4" />
                 <span>Authentic</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-brown-light">
-                <RotateCcw className="w-4 h-4" />
-                <span>7-day returns</span>
-              </div>
+             
             </div>
 
             {/* Action Buttons */}

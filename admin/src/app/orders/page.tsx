@@ -163,20 +163,42 @@ export default function OrdersPage() {
   };
 
   // Payment status badge
-  const PaymentStatusBadge = ({ paymentStatus }: { paymentStatus: string }) => {
-    const config: Record<string, { label: string; color: string }> = {
-      pending: { label: 'Pending', color: 'bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-400' },
-      paid: { label: 'Paid', color: 'bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400' },
-      failed: { label: 'Failed', color: 'bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-400' },
-      refunded: { label: 'Refunded', color: 'bg-gray-100 text-gray-700 dark:bg-gray-900/30 dark:text-gray-400' },
-    };
-    const c = config[paymentStatus] || config.pending;
-    return (
-      <span className={`inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium ${c.color}`}>
-        {c.label}
-      </span>
-    );
+ const PaymentStatusBadge = ({ paymentStatus }: { paymentStatus: string }) => {
+  const status = (paymentStatus || "pending").toLowerCase();
+
+  const config: Record<string, { label: string; color: string }> = {
+    pending: {
+      label: "Pending",
+      color:
+        "bg-amber-100 text-amber-800 border border-amber-300 dark:bg-amber-500/15 dark:text-amber-300 dark:border-amber-500/30",
+    },
+    paid: {
+      label: "Paid",
+      color:
+        "bg-emerald-100 text-emerald-800 border border-emerald-300 dark:bg-emerald-500/15 dark:text-emerald-300 dark:border-emerald-500/30",
+    },
+    failed: {
+      label: "Failed",
+      color:
+        "bg-red-100 text-red-800 border border-red-300 dark:bg-red-500/15 dark:text-red-300 dark:border-red-500/30",
+    },
+    refunded: {
+      label: "Refunded",
+      color:
+        "bg-slate-100 text-slate-800 border border-slate-300 dark:bg-slate-500/15 dark:text-slate-300 dark:border-slate-500/30",
+    },
   };
+
+  const c = config[status] || config.pending;
+
+  return (
+    <span
+      className={`inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold border ${c.color}`}
+    >
+      {c.label}
+    </span>
+  );
+};
 
   // Loading skeleton
   if (isLoading && !data) {
@@ -296,7 +318,7 @@ export default function OrdersPage() {
 
         {/* Amount */}
         <td className="py-3 px-4 font-cinzel text-gold-dark dark:text-gold">
-          ₹{formatPrice(order.grandTotal)}
+          {formatPrice(order.grandTotal)}
         </td>
 
         {/* Payment Status */}
@@ -458,7 +480,7 @@ export default function OrdersPage() {
                       </div>
                     </div>
                     <p className="font-cinzel text-sm text-gold-dark dark:text-gold">
-                      ₹{formatPrice(item.total || item.price * item.quantity)}
+                      {formatPrice(item.total || item.price * item.quantity)}
                     </p>
                   </div>
                 ))}
@@ -469,25 +491,25 @@ export default function OrdersPage() {
             <div className="border-t border-gold/10 dark:border-gold/5 pt-4 space-y-2">
               <div className="flex justify-between text-sm">
                 <span className="text-brown-light dark:text-ivory/60">Subtotal</span>
-                <span className="text-brown dark:text-ivory">₹{formatPrice(selectedOrder.subtotal)}</span>
+                <span className="text-brown dark:text-ivory">{formatPrice(selectedOrder.subtotal)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-brown-light dark:text-ivory/60">Shipping</span>
-                <span className="text-brown dark:text-ivory">₹{formatPrice(selectedOrder.shippingCost)}</span>
+                <span className="text-brown dark:text-ivory">{formatPrice(selectedOrder.shippingCost)}</span>
               </div>
               <div className="flex justify-between text-sm">
                 <span className="text-brown-light dark:text-ivory/60">Tax</span>
-                <span className="text-brown dark:text-ivory">₹{formatPrice(selectedOrder.tax)}</span>
+                <span className="text-brown dark:text-ivory">{formatPrice(selectedOrder.tax)}</span>
               </div>
               {selectedOrder.discount > 0 && (
                 <div className="flex justify-between text-sm text-green-600">
                   <span>Discount</span>
-                  <span>-₹{formatPrice(selectedOrder.discount)}</span>
+                  <span>-{formatPrice(selectedOrder.discount)}</span>
                 </div>
               )}
               <div className="flex justify-between font-cinzel text-lg pt-2 border-t border-gold/10 dark:border-gold/5">
                 <span className="text-brown dark:text-ivory">Grand Total</span>
-                <span className="text-gold-dark dark:text-gold">₹{formatPrice(selectedOrder.grandTotal)}</span>
+                <span className="text-gold-dark dark:text-gold">{formatPrice(selectedOrder.grandTotal)}</span>
               </div>
             </div>
 

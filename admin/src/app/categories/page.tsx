@@ -3,6 +3,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
+import type { ChangeEvent } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
@@ -37,10 +38,9 @@ import { Modal } from '@/components/ui/Modal';
 // Form Schema
 // ============================================================
 const categorySchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters').max(50),
+  name: z.string().min(2).max(50),
   slug: z.string().optional(),
   description: z.string().max(500).optional(),
-  icon: z.string().optional(),
   image: z.string().optional(),
   parentId: z.string().nullable().optional(),
   displayOrder: z.number().min(0).default(0),
@@ -62,6 +62,7 @@ export default function CategoriesPage() {
   const [editingCategory, setEditingCategory] = useState<any>(null);
   const [categoryToDelete, setCategoryToDelete] = useState<any>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
+  const [isUploadingImage, setIsUploadingImage] = useState(false);
 
   // Fetch categories
   const {
@@ -104,7 +105,7 @@ export default function CategoriesPage() {
       name: '',
       slug: '',
       description: '',
-      icon: '',
+      
       image: '',
       parentId: null,
       displayOrder: 0,
@@ -120,7 +121,7 @@ export default function CategoriesPage() {
         name: editingCategory.name || '',
         slug: editingCategory.slug || '',
         description: editingCategory.description || '',
-        icon: editingCategory.icon || '',
+        
         image: editingCategory.image || '',
         parentId: editingCategory.parentId || null,
         displayOrder: editingCategory.displayOrder || 0,
@@ -132,7 +133,7 @@ export default function CategoriesPage() {
         name: '',
         slug: '',
         description: '',
-        icon: '',
+        
         image: '',
         parentId: null,
         displayOrder: 0,
@@ -200,11 +201,50 @@ export default function CategoriesPage() {
   };
 
   const onSubmit = (data: CategoryFormData) => {
+    const payload = {
+      ...data,
+      image: data.image || undefined,
+      parentId: data.parentId || undefined,
+    };
+
     if (editingCategory) {
-      updateMutation.mutate({ id: editingCategory._id, data });
+      updateMutation.mutate({
+        id: editingCategory._id,
+        data: payload,
+      });
     } else {
-      createMutation.mutate(data);
+      createMutation.mutate(payload);
     }
+  };
+
+  const handleImageUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    try {
+      setIsUploadingImage(true);
+      const formData = new FormData();
+      formData.append('images', file);
+
+      const uploadedUrls = await adminApi.uploadCategoryImage(formData);
+      const imageUrl = Array.isArray(uploadedUrls) ? uploadedUrls[0] : uploadedUrls;
+
+      if (imageUrl) {
+        setValue('image', imageUrl, { shouldDirty: true, shouldValidate: true });
+        toast.success('Category image uploaded');
+      } else {
+        toast.error('Image upload did not return a URL');
+      }
+    } catch (error: any) {
+      toast.error(error?.message || 'Failed to upload image');
+    } finally {
+      setIsUploadingImage(false);
+      event.target.value = '';
+    }
+  };
+
+  const handleRemoveImage = () => {
+    setValue('image', '', { shouldDirty: true, shouldValidate: true });
   };
 
   const handleDelete = (category: any) => {
@@ -321,7 +361,17 @@ export default function CategoriesPage() {
       >
         <td className="py-3 px-4">
           <div className="flex items-center gap-3">
-            {category.icon && <span className="text-lg">{category.icon}</span>}
+ {category.image ? (
+  <img
+    src={category.image}
+    alt={category.name}
+    className="w-12 h-12 rounded-lg object-cover border"
+  />
+) : (
+  <div className="w-12 h-12 rounded-lg border flex items-center justify-center bg-gray-100 text-xs">
+    No Image
+  </div>
+)}
             <span className="font-medium text-black dark:text-black">
               {category.name}
             </span>
@@ -451,18 +501,48 @@ export default function CategoriesPage() {
             <Textarea {...register('description')} rows={3} placeholder="Category description..." />
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-900 mb-1">
-                Icon (emoji)
+              <label className="block text-sm font-medium text-gray-900 dark:text-gray-900 mb-2">
+                Category Image
               </label>
-              <Input {...register('icon')} placeholder="e.g., 🐘" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-900 dark:text-gray-900 mb-1">
-                Image URL
-              </label>
-              <Input {...register('image')} placeholder="https://..." />
+
+              <div className="rounded-2xl border border-dashed border-gold/30 bg-sand/40 p-4">
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  className="block w-full text-sm text-gray-700 file:mr-4 file:py-2 file:px-4 file:rounded-lg file:border-0 file:bg-gold file:text-white hover:file:bg-gold-dark cursor-pointer"
+                />
+                <p className="mt-2 text-xs text-gray-500">
+                  Upload a clear image for the category card and listing page.
+                </p>
+                <input type="hidden" {...register('image')} />
+
+                {watch('image') ? (
+                  <div className="mt-4 flex items-center gap-3">
+                    <img
+                      src={watch('image')}
+                      alt="Category preview"
+                      className="h-24 w-24 rounded-lg border border-gold/10 object-cover"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleRemoveImage}
+                      className="text-sm text-red-500 hover:text-red-600"
+                    >
+                      Remove image
+                    </button>
+                  </div>
+                ) : null}
+              </div>
+
+              {isUploadingImage ? (
+                <div className="mt-2 flex items-center gap-2 text-sm text-gray-600">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  Uploading image...
+                </div>
+              ) : null}
             </div>
           </div>
 

@@ -405,7 +405,7 @@ function PaymentSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              COD Fee (₹)
+              COD Fee ()
             </label>
             <Input
               {...register('codFee', { valueAsNumber: true })}
@@ -459,7 +459,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Free Shipping Threshold (₹)
+              Free Shipping Threshold ()
             </label>
             <Input
               {...register('freeShippingThreshold', { valueAsNumber: true })}
@@ -469,7 +469,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Standard Shipping (₹)
+              Standard Shipping ()
             </label>
             <Input
               {...register('standardShippingCost', { valueAsNumber: true })}
@@ -479,7 +479,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Express Shipping (₹)
+              Express Shipping ()
             </label>
             <Input
               {...register('expressShippingCost', { valueAsNumber: true })}
