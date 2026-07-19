@@ -1,6 +1,8 @@
 // frontend/src/features/auth/api/authApi.ts
 
 import { apiClient } from '@/services/apiClient';
+import type { ApiError } from '@/services/apiClient';
+import { getUserFriendlyErrorDetails } from '@/lib/notifications';
 import type {
   AuthResponse,
   LoginCredentials,
@@ -52,8 +54,18 @@ export const authApi = {
    * ```
    */
   register: async (data: RegisterData): Promise<AuthResponse> => {
-    const response = await apiClient.post<AuthResponse>('/auth/register', data);
-    return response.data;
+    try {
+      const response = await apiClient.post<AuthResponse>('/auth/register', data);
+      return response.data;
+    } catch (error) {
+      const apiError = error as ApiError;
+      throw {
+        status: apiError.status,
+        message: apiError.message,
+        code: apiError.code,
+        errors: apiError.errors,
+      };
+    }
   },
 
   /**
@@ -407,23 +419,8 @@ export const authApi = {
  * Extract error message from API error
  */
 export function getAuthErrorMessage(error: unknown): string {
-  if (error && typeof error === 'object' && 'response' in error) {
-    const axiosError = error as any;
-    if (axiosError.response?.data?.message) {
-      return axiosError.response.data.message;
-    }
-    if (axiosError.response?.data?.errors) {
-      const errors = axiosError.response.data.errors;
-      if (Array.isArray(errors)) {
-        return errors.map((e: any) => e.message || e).join(', ');
-      }
-      return Object.values(errors).flat().join(', ');
-    }
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  return 'An unexpected error occurred';
+  const details = getUserFriendlyErrorDetails(error);
+  return details.title;
 }
 
 /**

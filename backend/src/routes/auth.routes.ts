@@ -30,9 +30,9 @@ const registerLimiter = rateLimit({
 // Validation schemas
 const registerValidation = [
   body('name').notEmpty().withMessage('Name is required').trim().isLength({ min: 2, max: 50 }),
-  body('email').isEmail().withMessage('Valid email is required').normalizeEmail(),
-  body('phone').optional().isMobilePhone('any').withMessage('Valid phone number is required'),
-  body('password').isLength({ min: 6 }).withMessage('Password must be at least 6 characters'),
+  body('email').isEmail().withMessage('Please enter a valid email address').normalizeEmail(),
+  body('phone').notEmpty().withMessage('Phone number is required').trim().matches(/^\d{10}$/).withMessage('Phone number must be a valid 10-digit Indian number'),
+  body('password').isLength({ min: 8 }).withMessage('Password must be at least 8 characters').matches(/[A-Z]/).withMessage('Password must contain at least one uppercase letter').matches(/[a-z]/).withMessage('Password must contain at least one lowercase letter').matches(/[0-9]/).withMessage('Password must contain at least one number'),
   body('confirmPassword').custom((value, { req }) => value === req.body.password)
     .withMessage('Passwords do not match'),
 ];

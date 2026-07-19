@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation, UseQueryOptions, UseMutationOptions, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import { useCallback, useMemo, useEffect } from 'react';
 
 import authApi, { authQueryKeys, getAuthErrorMessage, invalidateAuthQueries } from '@/features/auth/api/authApi';
@@ -196,13 +196,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       setUser(authData.user);
       setTokens(authData.accessToken, authData.refreshToken);
       invalidateAuthQueries(queryClient);
-      toast.success(`Welcome back, ${authData.user.name || 'Devotee'}! 🙏`);
+      toast.success('Welcome back!', 'You have successfully signed in.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogin);
       }
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Login failed. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t complete that request.');
     },
   });
 
@@ -214,13 +214,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       setUser(authData.user);
       setTokens(authData.accessToken, authData.refreshToken);
       invalidateAuthQueries(queryClient);
-      toast.success(`Welcome, ${authData.user.name || 'Devotee'}! 🙏 Please verify your email.`);
+      toast.success('Your account has been created successfully.', 'Welcome to Pandit Ji Marble Murti Art.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogin);
       }
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Registration failed. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t complete that request.');
     },
   });
 
@@ -232,13 +232,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       setUser(authData.user);
       setTokens(authData.accessToken, authData.refreshToken);
       invalidateAuthQueries(queryClient);
-      toast.success(`Welcome, ${authData.user.name || 'Devotee'}! 🙏`);
+      toast.success('Welcome back!', 'You have successfully signed in.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogin);
       }
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Social login failed. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t complete that request.');
     },
   });
 
@@ -256,7 +256,7 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       clearAuth();
       invalidateAuthQueries(queryClient);
       queryClient.clear(); // Clear all cached data
-      toast.success('Logged out successfully');
+      toast.success('You have been signed out safely.', 'See you again soon.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogout);
       }
@@ -265,7 +265,7 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       // Clear local state even if API fails
       clearAuth();
       queryClient.clear();
-      toast.success('Logged out successfully');
+      toast.success('You have been signed out safely.', 'See you again soon.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogout);
       }
@@ -279,13 +279,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
       clearAuth();
       invalidateAuthQueries(queryClient);
       queryClient.clear();
-      toast.success('Logged out from all devices');
+      toast.success('You have been signed out safely.', 'All active sessions have been closed.');
       if (redirectOnSuccess) {
         router.push(redirectAfterLogout);
       }
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to logout from all devices');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t complete that request.');
     },
   });
 
@@ -293,10 +293,10 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
   const forgotPasswordMutation = useMutation({
     mutationFn: authApi.forgotPassword,
     onSuccess: (_, variables) => {
-      toast.success(`Password reset link sent to ${variables}`);
+      toast.success('A password reset link has been sent.', 'Please check your email for the next steps.');
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to send reset link. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t send the reset link right now.');
     },
   });
 
@@ -304,13 +304,13 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
   const resetPasswordMutation = useMutation({
     mutationFn: authApi.resetPassword,
     onSuccess: () => {
-      toast.success('Password reset successfully! Please login with your new password.');
+      toast.success('Your password has been updated successfully.', 'Please sign in with your new password.');
       if (redirectOnSuccess) {
         router.push('/login');
       }
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to reset password. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t update your password right now.');
     },
   });
 
@@ -318,10 +318,10 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
   const changePasswordMutation = useMutation({
     mutationFn: authApi.changePassword,
     onSuccess: () => {
-      toast.success('Password changed successfully!');
+      toast.success('Password Changed', 'Your password has been updated successfully.');
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to change password. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t update your password right now.');
     },
   });
 
@@ -331,10 +331,10 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
     onSuccess: (updatedUser: User) => {
       setUser(updatedUser);
       invalidateAuthQueries(queryClient);
-      toast.success('Profile updated successfully!');
+      toast.success('Profile Updated', 'Your information has been updated successfully.');
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to update profile. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t update your profile right now.');
     },
   });
 
@@ -347,10 +347,10 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
         setUser({ ...user, avatar: data.avatarUrl });
       }
       invalidateAuthQueries(queryClient);
-      toast.success('Avatar updated successfully!');
+      toast.success('Profile photo updated', 'Your photo has been updated successfully.');
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to update avatar. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t update your photo right now.');
     },
   });
 
@@ -362,10 +362,10 @@ export function useAuth(options: UseAuthOptions = {}): UseAuthReturn {
         setUser({ ...user, avatar: undefined });
       }
       invalidateAuthQueries(queryClient);
-      toast.success('Avatar removed successfully.');
+      toast.success('Profile photo removed', 'Your photo has been removed successfully.');
     },
     onError: (error: any) => {
-      toast.error(getAuthErrorMessage(error) || 'Failed to remove avatar. Please try again.');
+      toast.error(getAuthErrorMessage(error) || 'We couldn’t remove your photo right now.');
     },
   });
 

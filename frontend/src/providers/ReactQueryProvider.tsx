@@ -10,7 +10,7 @@ import {
   MutationCache,
 } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-import { toast } from 'react-hot-toast';
+import { toast, getUserFriendlyErrorDetails } from '@/lib/notifications';
 
 // ============================================================
 // Types
@@ -28,16 +28,7 @@ interface ReactQueryProviderProps {
  * Extract a user-friendly error message from an unknown error
  */
 const getErrorMessage = (error: unknown): string => {
-  if (typeof error === 'object' && error !== null && 'message' in error) {
-    return (error as { message: string }).message;
-  }
-  if (error instanceof Error) {
-    return error.message;
-  }
-  if (typeof error === 'string') {
-    return error;
-  }
-  return 'An unexpected error occurred. Please try again.';
+  return getUserFriendlyErrorDetails(error).title;
 };
 
 /**
@@ -124,7 +115,7 @@ export function ReactQueryProvider({ children }: ReactQueryProviderProps) {
             // Only show a toast for query errors that are not 401
             if (!isUnauthorized(error)) {
               const message = getErrorMessage(error);
-              toast.error(`Failed to load data: ${message}`);
+              toast.error(message);
             }
             // 401 errors will be handled by the auth store interceptor
           },
@@ -135,7 +126,7 @@ export function ReactQueryProvider({ children }: ReactQueryProviderProps) {
             // Show a toast for mutation errors (unless it's a 401)
             if (!isUnauthorized(error)) {
               const message = getErrorMessage(error);
-              toast.error(`Operation failed: ${message}`);
+              toast.error(message);
             }
           },
           onSuccess: (data, variables, context, mutation) => {

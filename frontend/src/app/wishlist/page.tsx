@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import { Heart, ShoppingBag, Trash2, MoveRight } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
@@ -34,13 +34,13 @@ export default function WishlistPage() {
   // Add to cart handler
   const handleAddToCart = (product: any) => {
     addItem(product, 1);
-    toast.success(`${product.name} added to cart ✨`);
+    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
   };
 
   // Remove from wishlist handler
   const handleRemove = (productId: string, productName: string) => {
     removeItem(productId);
-    toast.success(`${productName} removed from wishlist`);
+    toast.success('Removed from Wishlist', 'Item removed successfully.');
   };
 
   // Loading skeleton

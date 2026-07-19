@@ -4,7 +4,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { motion, useInView } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import { Send, Check, Mail, Sparkles, ArrowRight } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
@@ -34,7 +34,7 @@ export function Newsletter({
   subtitle = 'Subscribe to receive updates on new arrivals, exclusive collections, and spiritual insights.',
   placeholder = 'Enter your email address',
   buttonText = 'Subscribe',
-  successMessage = 'Successfully subscribed! 🙏',
+  successMessage = 'You’re on the list!',
   className,
   variant = 'default',
   onSubmit,
@@ -54,11 +54,11 @@ export function Newsletter({
     // Validate email
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!email.trim()) {
-      toast.error('Please enter your email address');
+      toast.error('Please enter your email address.', 'We’ll only use it for updates from our studio.');
       return;
     }
     if (!emailRegex.test(email)) {
-      toast.error('Please enter a valid email address');
+      toast.error('Please enter a valid email address.', 'We’ll only use it for updates from our studio.');
       return;
     }
 
@@ -75,7 +75,7 @@ export function Newsletter({
       setEmail('');
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('We couldn’t subscribe you right now.', 'Please try again in a moment.');
     } finally {
       setIsSubmitting(false);
     }

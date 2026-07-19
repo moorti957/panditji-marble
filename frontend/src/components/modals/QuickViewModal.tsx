@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Image from 'next/image';
 import Link from 'next/link';
 import { X, Heart, ShoppingBag, Minus, Plus, Star, StarHalf, Share2, Eye } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { useWishlistStore } from '@/features/wishlist/store/wishlistStore';
@@ -119,7 +119,7 @@ export function QuickViewModal({
   // Handlers
   const handleAddToCart = () => {
     addItem(product, quantity);
-    toast.success(`${quantity} × ${product.name} added to cart ✨`);
+    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
     onClose();
   };
 
@@ -127,8 +127,11 @@ export function QuickViewModal({
     toggleWishlist(product);
     toast.success(
       isInWishlist
-        ? `${product.name} removed from wishlist`
-        : `${product.name} added to wishlist ❤️`
+        ? 'Removed from Wishlist'
+        : 'Added to Wishlist ❤️',
+      isInWishlist
+        ? 'Item removed successfully.'
+        : 'You can find it later from your wishlist.'
     );
   };
 
@@ -146,7 +149,7 @@ export function QuickViewModal({
       }
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard!');
+      toast.success('Link copied', 'You can share it whenever you like.');
     }
   };
 

@@ -7,7 +7,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
@@ -58,11 +58,11 @@ export default function ContactPage() {
       await new Promise((resolve) => setTimeout(resolve, 1500));
       console.log('Contact form data:', data);
       setIsSuccess(true);
-      toast.success('Your message has been sent! We\'ll get back to you soon 🙏');
+      toast.success('Message Sent', 'Thank you for contacting us. We\'ll respond as soon as possible.');
       reset();
       setTimeout(() => setIsSuccess(false), 5000);
     } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('We couldn’t send your message.', 'Please try again in a moment.');
     } finally {
       setIsSubmitting(false);
     }

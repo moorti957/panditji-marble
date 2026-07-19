@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, type Variants } from 'framer-motion';
 import { Heart, ShoppingBag, Eye, Star, StarHalf } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { useWishlistStore } from '@/features/wishlist/store/wishlistStore';
@@ -81,7 +81,7 @@ const isInWishlist = useWishlistStore((state) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product, 1);
-    toast.success(`${product.name} added to cart ✨`);
+    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
   };
 
   // Wishlist toggle handler
@@ -91,8 +91,11 @@ const isInWishlist = useWishlistStore((state) => {
     toggleWishlist(product);
     toast.success(
       isInWishlist
-        ? `${product.name} removed from wishlist`
-        : `${product.name} added to wishlist ❤️`
+        ? 'Removed from Wishlist'
+        : 'Added to Wishlist ❤️',
+      isInWishlist
+        ? 'Item removed successfully.'
+        : 'You can find it later from your wishlist.'
     );
   };
 
@@ -103,7 +106,7 @@ const isInWishlist = useWishlistStore((state) => {
     if (onQuickView) {
       onQuickView(product);
     } else {
-      toast('Quick view coming soon!', { icon: '👀' });
+      toast.info('Quick view coming soon.', 'We will open that view shortly.');
     }
   };
 

@@ -7,7 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Link from 'next/link';
 import Image from 'next/image';
 import { X, Minus, Plus, Trash2, ShoppingBag, Ticket, ChevronRight } from 'lucide-react';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { formatPrice, cn } from '@/lib/utils';
@@ -94,7 +94,7 @@ export default function CartDrawer() {
   // Handle coupon apply (mock)
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
-      toast.error('Please enter a coupon code');
+      toast.error('Please enter a coupon code.', 'We’ll apply it as soon as you’re ready.');
       return;
     }
     setIsApplyingCoupon(true);
@@ -103,21 +103,21 @@ export default function CartDrawer() {
     // Mock validation
     if (couponCode.toUpperCase() === 'DIVINE10') {
       setAppliedCoupon({ code: couponCode.toUpperCase(), discount: 10 });
-      toast.success('Coupon applied! 10% discount ✨');
+      toast.success('Offer applied', 'Your discount has been added successfully.');
       setCouponCode('');
     } else if (couponCode.toUpperCase() === 'WELCOME20') {
       setAppliedCoupon({ code: couponCode.toUpperCase(), discount: 20 });
-      toast.success('Coupon applied! 20% discount 🙏');
+      toast.success('Offer applied', 'Your discount has been added successfully.');
       setCouponCode('');
     } else {
-      toast.error('Invalid coupon code');
+      toast.error('We couldn’t apply that offer.', 'Please check the coupon code and try again.');
     }
     setIsApplyingCoupon(false);
   };
 
   const removeCoupon = () => {
     setAppliedCoupon(null);
-    toast.success('Coupon removed');
+    toast.success('Offer removed', 'Your discount has been removed.');
   };
 
   // Calculate totals

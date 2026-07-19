@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import { Eye, EyeOff, Mail, Lock, ArrowRight } from 'lucide-react';
 
 import { Container } from '@/components/ui/Container';
@@ -17,6 +17,7 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Checkbox } from '@/components/ui/Checkbox';
 import { authApi } from "@/features/auth/api/authApi";
+import { getUserFriendlyErrorDetails } from '@/lib/notifications';
 
 import { useAuthStore } from '@/features/auth/store/authStore';
 
@@ -71,10 +72,10 @@ export default function LoginPage() {
     response.data.refreshToken
 );
 
-    toast.success("Welcome back! 🙏");
+    toast.success('Welcome back!', 'You have successfully signed in.');
     router.push("/");
   } catch (error: any) {
-    toast.error(error?.message || "Invalid email or password");
+    toast.error(getUserFriendlyErrorDetails(error).title, getUserFriendlyErrorDetails(error).description);
   } finally {
     setIsSubmitting(false);
   }

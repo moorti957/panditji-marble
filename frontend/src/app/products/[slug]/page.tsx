@@ -45,7 +45,7 @@ import { useMediaQuery } from '@/hooks/useMediaQuery';
 
 // Utils
 import { formatPrice } from '@/lib/utils';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 
 // Types
 import { Product, ProductSpecification, Review } from '@/types';
@@ -129,7 +129,7 @@ useEffect(() => {
   // Add to cart handler
   const handleAddToCart = () => {
     addItem(product, quantity);
-    toast.success(`${quantity} × ${product.name} added to cart ✨`);
+    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
   };
 
   // Wishlist toggle
@@ -163,7 +163,7 @@ useEffect(() => {
       }
     } else {
       await navigator.clipboard.writeText(url);
-      toast.success('Link copied to clipboard!');
+      toast.success('Link copied', 'You can share it whenever you like.');
     }
   };
 

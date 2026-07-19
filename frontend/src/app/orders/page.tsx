@@ -6,7 +6,7 @@ import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { motion, AnimatePresence } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   Package,
   ChevronRight,
@@ -78,7 +78,7 @@ export default function OrdersPage() {
         );
       } catch (error) {
         console.error('Failed to load orders', error);
-        toast.error('Unable to load your orders right now.');
+        toast.error('We couldn’t load your orders right now.', 'Please try again in a moment.');
       } finally {
         setIsLoading(false);
       }
@@ -140,20 +140,20 @@ export default function OrdersPage() {
 
   // Track order action
   const handleTrackOrder = (orderId: string) => {
-    toast.success(`Tracking order ${orderId}`);
+    toast.success('Order tracking', `We’re preparing the latest details for ${orderId}.`);
     // Navigate to tracking page
     // router.push(`/track-order/${orderId}`);
   };
 
   // Download invoice
   const handleDownloadInvoice = (orderId: string) => {
-    toast.success(`Downloading invoice for ${orderId}`);
+    toast.success('Invoice ready', `We’re preparing your invoice for ${orderId}.`);
     // Trigger download
   };
 
   // Cancel order
   const handleCancelOrder = (orderId: string) => {
-    toast.success(`Order ${orderId} cancelled`);
+    toast.success('Order cancelled', 'Your request has been received and we’ll update the order shortly.');
     // Update status
     setOrders((prev) =>
       prev.map((o) =>

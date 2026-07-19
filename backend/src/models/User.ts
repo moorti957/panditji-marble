@@ -89,6 +89,7 @@ const UserSchema = new Schema<IUser>(
       type: String,
       required: true,
       trim: true,
+      unique: true,
       match: /^[0-9]{10}$/,
     },
     password: {

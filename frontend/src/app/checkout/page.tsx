@@ -10,7 +10,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useForm, useFieldArray } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   ChevronLeft,
   ChevronRight,
@@ -178,7 +178,7 @@ export default function CheckoutPage() {
   // Redirect if cart is empty
   useEffect(() => {
     if (items.length === 0) {
-      toast.error('Your cart is empty');
+      toast.error('Your cart is empty.', 'Please add a few items before continuing.');
       router.push('/products');
     }
   }, [items, router]);
@@ -192,7 +192,7 @@ export default function CheckoutPage() {
         if (isValid) {
           setCurrentStep(step);
         } else {
-          toast.error('Please fill in all required fields');
+          toast.error('Please check the highlighted information.', 'A few details need a quick review before we continue.');
         }
       });
     } else {
@@ -211,7 +211,7 @@ export default function CheckoutPage() {
           placeOrder();
         }
       } else {
-        toast.error('Please fill in all required fields');
+        toast.error('Please check the highlighted information.', 'A few details need a quick review before we continue.');
       }
     });
   };
@@ -312,9 +312,9 @@ export default function CheckoutPage() {
             setOrderId(createdOrder?.orderNumber || createdOrder?._id || 'PJM');
             setOrderComplete(true);
             clearCart();
-            toast.success('Payment successful! Order placed. 🙏');
+            toast.success('Order Created', 'Your order has been placed successfully.');
           } catch (error: any) {
-            toast.error(error?.message || 'Payment verification failed.');
+            toast.error('We couldn’t complete your payment.', 'Please try again in a moment.');
           } finally {
             setIsSubmitting(false);
           }
@@ -322,7 +322,7 @@ export default function CheckoutPage() {
         modal: {
           ondismiss: () => {
             setIsSubmitting(false);
-            toast.error('Payment was cancelled.');
+            toast.error('Payment was cancelled.', 'You can try again anytime.');
           },
         },
       };
@@ -331,7 +331,7 @@ export default function CheckoutPage() {
       razorpay.open();
     } catch (error: any) {
       console.error(error);
-      toast.error(error?.message || 'Failed to place order. Please try again.');
+      toast.error('We couldn’t place your order.', 'Please try again in a moment.');
       setIsSubmitting(false);
     }
   };

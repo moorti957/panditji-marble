@@ -91,16 +91,16 @@ export class AuthService {
   }) {
     const { name, email, phone, password, role } = userData;
 
-    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       throw new AppError('User already exists with this email', 400);
     }
 
-    // Hash password
-    
+    const existingPhoneUser = await User.findOne({ phone });
+    if (existingPhoneUser) {
+      throw new AppError('User already exists with this phone number', 400);
+    }
 
-    // Create user
     const user = new User({
       name,
       email,

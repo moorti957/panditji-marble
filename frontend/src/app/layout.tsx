@@ -16,6 +16,7 @@ import ScrollReset from '../components/layout/ScrollReset';
 
 // Toast notifications
 import { Toaster } from 'react-hot-toast';
+import { Sparkles } from 'lucide-react';
 
 // ------------------------------------------------------------------
 // Font configuration
@@ -125,16 +126,14 @@ export default function RootLayout({
             <Toaster
               position="bottom-right"
               toastOptions={{
-                duration: 4000,
+                duration: 4500,
                 style: {
-                  background: '#FFFCF7',
-                  color: '#2D2A24',
-                  border: '1px solid rgba(201, 168, 76, 0.2)',
-                  borderRadius: '12px',
-                  boxShadow: '0 12px 40px rgba(0,0,0,0.06)',
+                  background: 'transparent',
+                  boxShadow: 'none',
+                  padding: 0,
                 },
-                success: { icon: '✨' },
-                error: { icon: '⚠️' },
+                success: { icon: <Sparkles className="h-5 w-5" /> },
+                error: { icon: <Sparkles className="h-5 w-5" /> },
               }}
             />
           </>

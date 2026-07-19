@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   MapPin,
   Phone,
@@ -34,16 +34,16 @@ export default function Footer() {
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!email.trim()) {
-      toast.error('Please enter your email address');
+      toast.error('Please enter your email address.', 'We’ll only use it for updates from our studio.');
       return;
     }
     setIsSubscribing(true);
     try {
       await new Promise((resolve) => setTimeout(resolve, 1500));
-      toast.success('Successfully subscribed to our newsletter! 🙏');
+      toast.success('You’re on the list!', 'Thank you for subscribing to our updates.');
       setEmail('');
     } catch (error) {
-      toast.error('Something went wrong. Please try again.');
+      toast.error('We couldn’t subscribe you right now.', 'Please try again in a moment.');
     } finally {
       setIsSubscribing(false);
     }

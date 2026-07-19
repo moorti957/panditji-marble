@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 
 import type { Product } from '@/features/products/types/product.types';
 
@@ -245,7 +245,7 @@ export const useCartStore = create<CartState>()(
         });
 
         // Toast notification
-        toast.success(`${product.name} added to cart ✨`);
+        toast.success('Added to Cart', 'Your selected murti has been added successfully.');
       },
 
       // === Remove item ===
@@ -271,7 +271,7 @@ export const useCartStore = create<CartState>()(
           state.totalPrice = totals.subtotal;
         });
 
-        toast.success('Item removed from cart');
+        toast.success('Removed from Cart', 'Item removed successfully.');
       },
 
       // === Update quantity ===
@@ -330,7 +330,7 @@ export const useCartStore = create<CartState>()(
         const coupon = VALID_COUPONS[normalizedCode];
 
         if (!coupon) {
-          toast.error('Invalid coupon code');
+          toast.error('We couldn’t apply that offer.', 'Please check the coupon code and try again.');
           return false;
         }
 
@@ -354,7 +354,7 @@ export const useCartStore = create<CartState>()(
           state.totalPrice = totals.subtotal;
         });
 
-        toast.success(`Coupon ${coupon.code} applied! ${coupon.description}`);
+        toast.success('Offer applied', 'Your discount has been added successfully.');
         return true;
       },
 
@@ -380,7 +380,7 @@ export const useCartStore = create<CartState>()(
           state.totalPrice = totals.subtotal;
         });
 
-        toast.success('Coupon removed');
+        toast.success('Offer removed', 'Your discount has been removed.');
       },
 
       // === Set shipping method ===
@@ -428,7 +428,7 @@ export const useCartStore = create<CartState>()(
           state.totalPrice = totals.subtotal;
         });
 
-        toast.success(get().giftWrap ? 'Gift wrap added ✨' : 'Gift wrap removed');
+        toast.success(get().giftWrap ? 'Gift wrap added' : 'Gift wrap removed', get().giftWrap ? 'Your order will be wrapped beautifully.' : 'Gift wrap has been removed.');
       },
 
       // === Utility: Check if product is in cart ===

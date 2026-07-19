@@ -8,6 +8,7 @@ import axios, {
   InternalAxiosRequestConfig,
 } from 'axios';
 import { getAuthStore } from '@/store/rootStore'; // Or import from auth store directly
+import { getUserFriendlyErrorDetails } from '@/lib/notifications';
 
 // ============================================================
 // Types
@@ -220,9 +221,9 @@ apiClient.interceptors.response.use(
     const errorPayload = error.response?.data as ApiErrorPayload | undefined;
     const apiError: ApiError = {
       status: error.response?.status || 500,
-      message: errorPayload?.message || error.message || 'An unexpected error occurred',
+      message: errorPayload?.message || getUserFriendlyErrorDetails(error).title,
       code: errorPayload?.code,
-      errors: errorPayload?.errors,
+      errors: errorPayload?.errors || (errorPayload as { details?: Record<string, string[]> } | undefined)?.details,
     };
 
     // Return a rejected promise with the structured error

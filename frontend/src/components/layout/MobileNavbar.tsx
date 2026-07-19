@@ -6,7 +6,7 @@ import { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { motion, AnimatePresence, type Variants } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   Menu,
   X,
@@ -134,7 +134,7 @@ export default function MobileNavbar() {
   // Handle logout
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
+    toast.success('You have been signed out safely.', 'See you again soon.');
     setIsOpen(false);
     router.push('/');
   };

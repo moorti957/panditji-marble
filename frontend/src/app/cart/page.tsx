@@ -7,7 +7,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useRouter } from 'next/navigation';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   ShoppingBag,
   Trash2,
@@ -80,7 +80,7 @@ export default function CartPage() {
   // Apply coupon handler
   const handleApplyCoupon = async () => {
     if (!couponCode.trim()) {
-      toast.error('Please enter a coupon code');
+      toast.error('Please enter a coupon code.', 'We’ll apply it as soon as you’re ready.');
       return;
     }
 
@@ -91,14 +91,14 @@ export default function CartPage() {
     // Mock coupon validation (you'd check against your backend)
     if (couponCode.toUpperCase() === 'DIVINE10') {
       setAppliedCoupon({ code: couponCode.toUpperCase(), discount: 10 });
-      toast.success('Coupon applied! 10% discount ✨');
+      toast.success('Offer applied', 'Your discount has been added successfully.');
       setCouponCode('');
     } else if (couponCode.toUpperCase() === 'WELCOME20') {
       setAppliedCoupon({ code: couponCode.toUpperCase(), discount: 20 });
-      toast.success('Coupon applied! 20% discount 🙏');
+      toast.success('Offer applied', 'Your discount has been added successfully.');
       setCouponCode('');
     } else {
-      toast.error('Invalid coupon code');
+      toast.error('We couldn’t apply that offer.', 'Please check the coupon code and try again.');
     }
     setIsApplyingCoupon(false);
   };
@@ -106,13 +106,13 @@ export default function CartPage() {
   // Remove coupon
   const removeCoupon = () => {
     setAppliedCoupon(null);
-    toast.success('Coupon removed');
+    toast.success('Offer removed', 'Your discount has been removed.');
   };
 
   // Checkout handler
   const handleCheckout = () => {
     if (items.length === 0) {
-      toast.error('Your cart is empty');
+      toast.error('Your cart is empty.', 'Please add a few items before continuing.');
       return;
     }
     router.push('/checkout');

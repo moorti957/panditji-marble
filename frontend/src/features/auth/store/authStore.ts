@@ -46,9 +46,12 @@ export interface AuthState {
   
   // Convenience actions
   login: (user: User, accessToken: string, refreshToken?: string) => void;
+  register: (user: User, accessToken: string, refreshToken?: string) => void;
   logout: () => void;
   updateUser: (userData: Partial<User>) => void;
   refreshSession: (user: User, accessToken: string, refreshToken?: string) => void;
+  refreshAuthToken: (accessToken: string, refreshToken?: string) => void;
+  getCurrentUser: () => User | null;
 }
 
 // ============================================================
@@ -221,6 +224,20 @@ export const useAuthStore = create<AuthState>()(
       },
 
       /**
+       * Convenience register action
+       */
+      register: (user: User, accessToken: string, refreshToken?: string) => {
+        set((state) => {
+          state.user = user;
+          state.accessToken = accessToken;
+          state.refreshToken = refreshToken || null;
+          state.isAuthenticated = true;
+          state.isLoading = false;
+          state.error = null;
+        });
+      },
+
+      /**
        * Convenience logout action (clear all auth data)
        */
       logout: () => {
@@ -258,6 +275,26 @@ export const useAuthStore = create<AuthState>()(
           state.isLoading = false;
           state.error = null;
         });
+      },
+
+      /**
+       * Refresh only the token pair
+       */
+      refreshAuthToken: (accessToken: string, refreshToken?: string) => {
+        set((state) => {
+          state.accessToken = accessToken;
+          state.refreshToken = refreshToken || state.refreshToken;
+          state.isAuthenticated = !!accessToken;
+          state.isLoading = false;
+          state.error = null;
+        });
+      },
+
+      /**
+       * Get the current user from the store
+       */
+      getCurrentUser: () => {
+        return get().user;
       },
     })),
     {

@@ -6,7 +6,7 @@ import { useEffect, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
-import { toast } from 'react-hot-toast';
+import { toast } from '@/lib/notifications';
 import {
   ChevronDown,
   Heart,
@@ -139,7 +139,7 @@ export default function Navbar() {
 
   const handleLogout = () => {
     logout();
-    toast.success('Logged out successfully');
+    toast.success('You have been signed out safely.', 'See you again soon.');
     setIsProfileDropdownOpen(false);
     setIsMobileMenuOpen(false);
     router.push('/');

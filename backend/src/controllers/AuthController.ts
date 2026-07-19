@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import { User } from '../models/User';
 import { AuthService } from '../services/AuthService';
 import { AuthRequest } from '../middlewares/auth';
+import { AppError } from '../utils/AppError';
 
 export class AuthController {
   /**
@@ -16,23 +17,31 @@ export class AuthController {
     try {
       const { name, email, phone, password, role } = req.body;
 
-      // Check if user exists
-      const existingUser = await User.findOne({ email });
-      if (existingUser) {
-        return res.status(400).json({
+      const normalizedEmail = String(email || '').trim().toLowerCase();
+      const normalizedPhone = String(phone || '').trim();
+
+      const existingEmailUser = await User.findOne({ email: normalizedEmail });
+      if (existingEmailUser) {
+        return res.status(409).json({
           success: false,
-          message: 'User already exists with this email',
+          message: 'This email is already registered.',
+          code: 'DUPLICATE_EMAIL',
         });
       }
 
-      // Hash password
-     
+      const existingPhoneUser = await User.findOne({ phone: normalizedPhone });
+      if (existingPhoneUser) {
+        return res.status(409).json({
+          success: false,
+          message: 'This phone number is already registered.',
+          code: 'DUPLICATE_PHONE',
+        });
+      }
 
-      // Create user
       const user = new User({
-        name,
-        email,
-        phone,
+        name: String(name || '').trim(),
+        email: normalizedEmail,
+        phone: normalizedPhone,
         password,
         role: role || 'user',
         isActive: true,
@@ -41,39 +50,55 @@ export class AuthController {
 
       await user.save();
 
-      // Generate verification token
       const verificationToken = crypto.randomBytes(32).toString('hex');
-      // Save token to user (you'd store this in a separate collection or field)
-      // For simplicity, we'll send email without saving token (but we should)
-      // In real implementation, save token to user.verificationToken and expiry.
+      user.verificationToken = verificationToken;
+      user.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000);
+      await user.save();
 
-      // Send verification email (placeholder)
-      // await sendVerificationEmail(email, verificationToken);
-
-      // Generate tokens
       const accessToken = AuthService.generateAccessToken(user);
       const refreshToken = AuthService.generateRefreshToken(user);
 
+      const userPayload = {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        phone: user.phone,
+        role: user.role,
+      };
+
       return res.status(201).json({
         success: true,
-        message: 'User created successfully. Please verify your email.',
+        message: 'Account created successfully.',
         data: {
-          user: {
-            id: user._id,
-            name: user.name,
-            email: user.email,
-            phone: user.phone,
-            role: user.role,
-          },
+          user: userPayload,
           accessToken,
           refreshToken,
         },
       });
-    } catch (error) {
+    } catch (error: any) {
+      if (error?.code === 11000) {
+        const duplicateField = Object.keys(error.keyPattern || {})[0] || 'field';
+        return res.status(409).json({
+          success: false,
+          message: duplicateField === 'email' ? 'This email is already registered.' : 'This phone number is already registered.',
+          code: duplicateField === 'email' ? 'DUPLICATE_EMAIL' : 'DUPLICATE_PHONE',
+        });
+      }
+
+      if (error instanceof AppError) {
+        return res.status(error.statusCode).json({
+          success: false,
+          message: error.message,
+          code: error.code,
+          details: error.details,
+        });
+      }
+
       console.error('Registration error:', error);
       return res.status(500).json({
         success: false,
         message: 'Internal server error',
+        code: 'INTERNAL_SERVER_ERROR',
       });
     }
   }
