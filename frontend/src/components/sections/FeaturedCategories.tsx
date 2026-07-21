@@ -2,12 +2,11 @@
 
 'use client';
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { motion, useInView } from 'framer-motion';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay, A11y } from 'swiper/modules';
-import { ChevronLeft, ChevronRight, ArrowRight, Sparkles } from 'lucide-react';
+import { ChevronLeft, ChevronRight, ArrowRight } from 'lucide-react';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -51,8 +50,6 @@ export function FeaturedCategories({
   className,
   loading = false,
 }: FeaturedCategoriesProps) {
-  const sectionRef = useRef<HTMLDivElement>(null);
-  const isInView = useInView(sectionRef, { once: true, amount: 0.1 });
   const [isMounted, setIsMounted] = useState(false);
 
   useEffect(() => {
@@ -108,17 +105,11 @@ export function FeaturedCategories({
     const [featured, ...rest] = categories;
     return (
       <section
-        ref={sectionRef}
         className={cn('py-12 md:py-16 bg-ivory dark:bg-brown', className)}
       >
         <Container>
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
-          >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <div className="ornate-divider">
                 <span className="diamond">✦</span>
@@ -139,32 +130,22 @@ export function FeaturedCategories({
               {viewAllLabel}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </motion.div>
+          </div>
 
           {/* Featured grid: 1 large + rest in grid */}
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
             {/* Featured category (large) */}
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95 }}
-              animate={isInView ? { opacity: 1, scale: 1 } : {}}
-              transition={{ duration: 0.5, delay: 0.1 }}
-              className="lg:col-span-1"
-            >
+            <div className="lg:col-span-1">
               <CategoryCard category={featured} variant="featured" />
-            </motion.div>
+            </div>
 
             {/* Rest in grid */}
             <div className="lg:col-span-2">
               <div className="grid grid-cols-2 gap-4 md:gap-6">
-                {rest.map((category, index) => (
-                  <motion.div
-                    key={category.id}
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={isInView ? { opacity: 1, y: 0 } : {}}
-                    transition={{ duration: 0.4, delay: 0.1 + index * 0.05 }}
-                  >
+                {rest.map((category) => (
+                  <div key={category.id}>
                     <CategoryCard category={category} variant="default" />
-                  </motion.div>
+                  </div>
                 ))}
               </div>
             </div>
@@ -178,17 +159,11 @@ export function FeaturedCategories({
   if (displayMode === 'slider') {
     return (
       <section
-        ref={sectionRef}
         className={cn('py-12 md:py-16 bg-ivory dark:bg-brown overflow-hidden', className)}
       >
         <Container>
           {/* Header */}
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={isInView ? { opacity: 1, y: 0 } : {}}
-            transition={{ duration: 0.6 }}
-            className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
-          >
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
             <div>
               <div className="ornate-divider">
                 <span className="diamond">✦</span>
@@ -209,7 +184,7 @@ export function FeaturedCategories({
               {viewAllLabel}
               <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
             </Link>
-          </motion.div>
+          </div>
 
           {/* Swiper Slider */}
           <div className="relative">
@@ -237,14 +212,9 @@ export function FeaturedCategories({
             >
               {categories.map((category) => (
                 <SwiperSlide key={category.id}>
-                  <motion.div
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={isInView ? { opacity: 1, scale: 1 } : {}}
-                    transition={{ duration: 0.4 }}
-                    className="h-full"
-                  >
+                  <div className="h-full">
                     <CategoryCard category={category} variant="default" />
-                  </motion.div>
+                  </div>
                 </SwiperSlide>
               ))}
             </Swiper>
@@ -312,17 +282,11 @@ export function FeaturedCategories({
   // Default: Grid mode
   return (
     <section
-      ref={sectionRef}
       className={cn('py-12 md:py-16 bg-ivory dark:bg-brown', className)}
     >
       <Container>
         {/* Header */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={isInView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6 }}
-          className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8"
-        >
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
           <div>
             <div className="ornate-divider">
               <span className="diamond">✦</span>
@@ -343,19 +307,14 @@ export function FeaturedCategories({
             {viewAllLabel}
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
           </Link>
-        </motion.div>
+        </div>
 
         {/* Grid */}
         <div className={cn('grid gap-4 md:gap-6', columnClasses[columns])}>
-          {categories.map((category, index) => (
-            <motion.div
-              key={category.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={isInView ? { opacity: 1, y: 0 } : {}}
-              transition={{ duration: 0.4, delay: index * 0.05 }}
-            >
+          {categories.map((category) => (
+            <div key={category.id}>
               <CategoryCard category={category} variant="default" />
-            </motion.div>
+            </div>
           ))}
         </div>
       </Container>

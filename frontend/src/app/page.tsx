@@ -141,9 +141,9 @@ export default function HomePage() {
       <Hero />
 
       {/* 2. Featured Categories */}
-      <ScrollReveal>
+      
         <FeaturedCategories categories={categories} />
-      </ScrollReveal>
+      
 
       {/* 3. Featured Products */}
       <ScrollReveal>

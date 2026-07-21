@@ -2,7 +2,8 @@
 
 'use client';
 
-import React, { useRef, useState, useCallback, useMemo } from 'react';
+import React, { useRef, useState, useCallback, useMemo, useEffect } from 'react';
+
 import { motion, useInView, useReducedMotion, Variants, HTMLMotionProps, Transition } from 'framer-motion';
 import { cn } from '../../lib/utils';
 
@@ -226,14 +227,20 @@ export function ScrollReveal({
   }, [disabled, prefersReducedMotion, animateOnMount, isInView]);
 
   // Track animation state (derived during render instead of in an effect,
-  // to avoid the extra render pass caused by setState-in-effect)
-  const [prevIsInView, setPrevIsInView] = useState(isInView);
-  if (isInView !== prevIsInView) {
-    setPrevIsInView(isInView);
-    if (isInView && once && !hasAnimated) {
-      setHasAnimated(true);
-    }
+  // // to avoid the extra render pass caused by setState-in-effect)
+  // const [prevIsInView, setPrevIsInView] = useState(isInView);
+  // if (isInView !== prevIsInView) {
+  //   setPrevIsInView(isInView);
+  //   if (isInView && once && !hasAnimated) {
+  //     setHasAnimated(true);
+  //   }
+  // }
+  
+useEffect(() => {
+  if (isInView && once && !hasAnimated) {
+    setHasAnimated(true);
   }
+}, [isInView, once, hasAnimated]);
 
   // Get the appropriate variants
   const getVariants = useCallback((): Variants => {
@@ -324,8 +331,8 @@ export function ScrollReveal({
   const animationProps = {
     ref,
     className,
-    initial: shouldAnimate && !hasAnimated ? 'hidden' : false,
-    animate: isInView || (once && hasAnimated) ? 'visible' : 'hidden',
+   initial: 'hidden',
+animate: isInView ? 'visible' : 'hidden',
     variants,
     transition,
     ...props,

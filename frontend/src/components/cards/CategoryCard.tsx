@@ -5,7 +5,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, type Variants } from 'framer-motion';
+import { motion } from 'framer-motion';
 import { ChevronRight, Sparkles } from 'lucide-react';
 
 import { cn } from '@/lib/utils';
@@ -46,14 +46,7 @@ export function CategoryCard({
   const { name, slug, image, description, productCount, isFeatured } = category;
 
   // Card variants
-  const cardVariants: Variants = {
-    initial: { opacity: 0, y: 20 },
-    animate: { opacity: 1, y: 0 },
-    hover: {
-      y: -8,
-      transition: { duration: 0.3, ease: 'easeOut' },
-    },
-  };
+
 
   const fallbackImage = '/images/category-placeholder.svg';
 
@@ -86,10 +79,15 @@ export function CategoryCard({
   if (variant === 'featured') {
     return (
       <motion.div
-        variants={cardVariants}
-        initial="initial"
-        animate="animate"
-        whileHover="hover"
+       
+        initial={false}
+  whileHover={{
+    y: -8,
+  }}
+  transition={{
+    duration: 0.3,
+    ease: 'easeOut',
+  }}
         className={cn(
           'group relative overflow-hidden rounded-2xl shadow-sm hover:shadow-xl transition-all duration-300',
           className
@@ -109,7 +107,7 @@ export function CategoryCard({
                   !imageLoaded && 'blur-sm scale-105'
                 )}
                 sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                priority={priority}
+                loading={priority ? 'eager' : 'lazy'}
                 onLoad={() => setImageLoaded(true)}
               />
             ) : (
@@ -168,10 +166,14 @@ export function CategoryCard({
   // Default variant (standard category card)
   return (
     <motion.div
-      variants={cardVariants}
-      initial="initial"
-      animate="animate"
-      whileHover="hover"
+       initial={false}
+  whileHover={{
+    y: -8,
+  }}
+  transition={{
+    duration: 0.3,
+    ease: 'easeOut',
+  }}
       className={cn(
         'group bg-white dark:bg-brown-dark rounded-2xl overflow-hidden shadow-sm border border-gold/5 dark:border-gold/10 hover:shadow-xl transition-all duration-300',
         className
@@ -192,7 +194,7 @@ export function CategoryCard({
                 !imageLoaded && 'blur-sm scale-105'
               )}
               sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-              priority={priority}
+             loading={priority ? 'eager' : 'lazy'}
               onLoad={() => setImageLoaded(true)}
             />
           ) : (
