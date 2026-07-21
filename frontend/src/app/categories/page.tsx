@@ -12,6 +12,7 @@ import { Skeleton } from '@/components/ui/Skeleton';
 import { categoriesApi } from '@/features/categories/api/categoriesApi';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
 
+
 // ============================================================
 // CATEGORIES PAGE
 // ============================================================
@@ -25,6 +26,11 @@ export default function CategoriesPage() {
   });
 
   const categories = data?.categories;
+  console.log("Categories Data:", data);
+
+console.log("API Response:", data);
+console.log("Categories:", categories);
+console.log("Count:", categories?.length);
 
   // Loading state
   if (isLoading) {
@@ -93,7 +99,7 @@ export default function CategoriesPage() {
       </motion.div>
 
       {/* Category grid */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 md:gap-6">
+      <div className="grid grid-cols-1 gap-4">
         {categories.map((category: Category, index: number) => (
           <motion.div
             key={category.id}

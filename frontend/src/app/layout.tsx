@@ -37,6 +37,7 @@ const cinzel = Cinzel({
 // Metadata & Viewport (SEO + PWA ready)
 // ------------------------------------------------------------------
 export const metadata: Metadata = {
+  metadataBase: new URL("https://www.panditjimarblemurtiarts.in"),
   title: {
     default: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
     template: '%s | Pandit Ji Marble Murti Arts',
@@ -50,7 +51,7 @@ export const metadata: Metadata = {
   publisher: 'Pandit Ji Marble Murti Arts',
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://www.panditjimarblemurtiarts.in',
+    canonical: "/",
   },
   openGraph: {
     title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
@@ -80,7 +81,7 @@ export const metadata: Metadata = {
     icon: '/favicon.ico',
     apple: '/apple-touch-icon.png',
   },
-  manifest: '/manifest.json',
+  
 };
 
 export const viewport: Viewport = {

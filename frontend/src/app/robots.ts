@@ -6,6 +6,7 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
     },
-    sitemap: "https://panditjimarblemurtiarts.in/sitemap.xml",
+
+    sitemap: "https://www.panditjimarblemurtiarts.in/sitemap.xml",
   };
 }
