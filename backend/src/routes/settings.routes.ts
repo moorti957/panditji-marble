@@ -4,66 +4,160 @@ import { auth } from '../middlewares/auth';
 
 const router = Router();
 
-const normalizeSettingsPayload = (payload: any = {}) => {
-  const paymentMethods = payload.paymentMethods || {};
-  const shipping = payload.shipping || {};
-
-  return {
-    ...payload,
-    paymentMethods: {
-      cod: paymentMethods.cod ?? payload.codEnabled ?? true,
-      upi: paymentMethods.upi ?? payload.upiEnabled ?? true,
-      card: paymentMethods.card ?? payload.cardEnabled ?? true,
-      wallet: paymentMethods.wallet ?? payload.walletEnabled ?? true,
-      netBanking: paymentMethods.netBanking ?? payload.netBankingEnabled ?? true,
-    },
-    gstPercentage: payload.gstPercentage ?? payload.taxRate ?? 18,
-    taxRate: payload.gstPercentage ?? payload.taxRate ?? 18,
-    shipping: {
-      standard: shipping.standard ?? payload.standardShippingCost ?? 500,
-      express: shipping.express ?? payload.expressShippingCost ?? 1200,
-    },
-    freeShippingThreshold: payload.freeShippingThreshold ?? 5000,
-    standardShippingCost: shipping.standard ?? payload.standardShippingCost ?? 500,
-    expressShippingCost: shipping.express ?? payload.expressShippingCost ?? 1200,
-    giftWrapCharge: payload.giftWrapCharge ?? payload.giftWrapCost ?? 99,
-    advancePaymentPercentage: payload.advancePaymentPercentage ?? payload.advancePaymentPercent ?? 25,
-    advancePaymentPercent: payload.advancePaymentPercentage ?? payload.advancePaymentPercent ?? 25,
-    codEnabled: paymentMethods.cod ?? payload.codEnabled ?? true,
-    upiEnabled: paymentMethods.upi ?? payload.upiEnabled ?? true,
-    cardEnabled: paymentMethods.card ?? payload.cardEnabled ?? true,
-    walletEnabled: paymentMethods.wallet ?? payload.walletEnabled ?? true,
-    netBankingEnabled: paymentMethods.netBanking ?? payload.netBankingEnabled ?? true,
-  };
-};
-
+// Get settings
 router.get('/', async (_req, res) => {
   try {
-    const settings = await Setting.findOne({});
-    res.json({ success: true, data: settings || new Setting() });
+    let settings = await Setting.findOne({});
+    if (!settings) {
+      settings = await Setting.create({});
+    }
+    res.json({ success: true, data: settings });
   } catch (error) {
     res.status(500).json({ success: false, message: 'Failed to load settings' });
   }
 });
 
-router.patch('/admin/settings', auth, async (req, res) => {
+// Update Store Settings
+router.put('/store', auth, async (req, res) => {
   try {
-    const payload = normalizeSettingsPayload(req.body || {});
-    const settings = await Setting.findOneAndUpdate({}, { $set: payload }, { new: true, upsert: true });
+    const { storeName, storeEmail, storePhone, storeAddress, storeDescription, currency } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          storeName, 
+          storeEmail, 
+          storePhone, 
+          storeAddress, 
+          storeDescription, 
+          currency 
+        } 
+      },
+      { new: true, upsert: true }
+    );
     res.json({ success: true, data: settings });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to update settings' });
+    res.status(500).json({ success: false, message: 'Failed to update store settings' });
   }
 });
 
-router.patch('/', auth, async (req, res) => {
+// Update Payment Settings
+router.put('/payment', auth, async (req, res) => {
   try {
-    const payload = normalizeSettingsPayload(req.body || {});
-    const settings = await Setting.findOneAndUpdate({}, { $set: payload }, { new: true, upsert: true });
+    const { taxRate, codEnabled, codFee, upiEnabled, cardEnabled } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          taxRate, 
+          gstPercentage: taxRate,
+          codEnabled, 
+          codFee, 
+          upiEnabled, 
+          cardEnabled,
+          'paymentMethods.cod': codEnabled,
+          'paymentMethods.upi': upiEnabled,
+          'paymentMethods.card': cardEnabled
+        } 
+      },
+      { new: true, upsert: true }
+    );
     res.json({ success: true, data: settings });
   } catch (error) {
-    res.status(500).json({ success: false, message: 'Failed to update settings' });
+    res.status(500).json({ success: false, message: 'Failed to update payment settings' });
+  }
+});
+
+// Update Shipping Settings
+router.put('/shipping', auth, async (req, res) => {
+  try {
+    const { freeShippingThreshold, standardShippingCost, expressShippingCost, internationalShippingEnabled } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          freeShippingThreshold, 
+          standardShippingCost, 
+          expressShippingCost, 
+          internationalShippingEnabled,
+          'shipping.standard': standardShippingCost,
+          'shipping.express': expressShippingCost
+        } 
+      },
+      { new: true, upsert: true }
+    );
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update shipping settings' });
+  }
+});
+
+// Update Social Settings
+router.put('/social', auth, async (req, res) => {
+  try {
+    const { facebook, instagram, youtube, twitter, whatsapp } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          'socialLinks.facebook': facebook,
+          'socialLinks.instagram': instagram,
+          'socialLinks.youtube': youtube,
+          'socialLinks.twitter': twitter,
+          'socialLinks.whatsapp': whatsapp
+        } 
+      },
+      { new: true, upsert: true }
+    );
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update social settings' });
+  }
+});
+
+// Update SEO Settings
+router.put('/seo', auth, async (req, res) => {
+  try {
+    const { metaTitle, metaDescription, metaKeywords, googleAnalyticsId } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          'seo.metaTitle': metaTitle,
+          'seo.metaDescription': metaDescription,
+          'seo.metaKeywords': metaKeywords,
+          'seo.googleAnalyticsId': googleAnalyticsId
+        } 
+      },
+      { new: true, upsert: true }
+    );
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update SEO settings' });
+  }
+});
+
+// Update Contact Settings
+router.put('/contact', auth, async (req, res) => {
+  try {
+    const { contactEmail, contactPhone, contactAddress, whatsappNumber } = req.body;
+    const settings = await Setting.findOneAndUpdate(
+      {},
+      { 
+        $set: { 
+          'contact.email': contactEmail,
+          'contact.phone': contactPhone,
+          'contact.address': contactAddress,
+          'contact.whatsapp': whatsappNumber
+        } 
+      },
+      { new: true, upsert: true }
+    );
+    res.json({ success: true, data: settings });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Failed to update contact settings' });
   }
 });
 
 export default router;
+

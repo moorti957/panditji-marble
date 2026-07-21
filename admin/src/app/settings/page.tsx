@@ -2,11 +2,11 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
   Save,
@@ -17,73 +17,89 @@ import {
   Share2,
   Globe,
   Mail,
-  Phone,
-  MapPin,
-  FileText,
-  Settings as SettingsIcon,
   RefreshCw,
 } from 'lucide-react';
 
 import { adminApi } from '@/services/adminApi';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Textarea } from '@/components/ui/Textarea';
 import { GlassCard } from '@/components/ui/GlassCard';
 
 // ============================================================
-// Settings Schema
+// Per-Tab Schemas
 // ============================================================
-const settingsSchema = z.object({
-  // Store Settings
+const storeSchema = z.object({
   storeName: z.string().min(2, 'Store name is required'),
   storeEmail: z.string().email('Invalid email'),
   storePhone: z.string().min(10, 'Phone number is required'),
   storeAddress: z.string().optional(),
   storeDescription: z.string().optional(),
-
-  // Payment Settings
   currency: z.string().default('INR'),
+});
+type StoreFormData = z.input<typeof storeSchema>;
+
+const paymentSchema = z.object({
   taxRate: z.number().min(0).max(100).default(18),
   codEnabled: z.boolean().default(true),
   codFee: z.number().min(0).default(0),
   upiEnabled: z.boolean().default(true),
   cardEnabled: z.boolean().default(true),
+});
+type PaymentFormData = z.input<typeof paymentSchema>;
 
-  // Shipping Settings
+const shippingSchema = z.object({
   freeShippingThreshold: z.number().min(0).default(5000),
   standardShippingCost: z.number().min(0).default(299),
   expressShippingCost: z.number().min(0).default(499),
   internationalShippingEnabled: z.boolean().default(false),
+});
+type ShippingFormData = z.input<typeof shippingSchema>;
 
-  // Social Media
+const socialSchema = z.object({
   facebook: z.string().optional(),
   instagram: z.string().optional(),
   youtube: z.string().optional(),
   twitter: z.string().optional(),
+});
+type SocialFormData = z.input<typeof socialSchema>;
 
-  // SEO
+const seoSchema = z.object({
   metaTitle: z.string().optional(),
   metaDescription: z.string().optional(),
   metaKeywords: z.string().optional(),
   googleAnalyticsId: z.string().optional(),
+});
+type SEOFormData = z.input<typeof seoSchema>;
 
-  // Contact
-  contactEmail: z.string().email('Invalid email').optional(),
+const contactSchema = z.object({
+  contactEmail: z.string().email('Invalid email').optional().or(z.literal('')),
   contactPhone: z.string().optional(),
   contactAddress: z.string().optional(),
   whatsappNumber: z.string().optional(),
 });
+type ContactFormData = z.input<typeof contactSchema>;
 
-type SettingsFormData = z.input<typeof settingsSchema>;
+// ============================================================
+// Shared ref handle type
+// ============================================================
+export interface TabFormHandle {
+  submit: () => void;
+}
 
 // ============================================================
 // Settings Page
 // ============================================================
 export default function SettingsPage() {
-  const queryClient = useQueryClient();
   const [activeTab, setActiveTab] = useState('store');
+  const [pendingByTab, setPendingByTab] = useState<Record<string, boolean>>({
+    store: false,
+    payment: false,
+    shipping: false,
+    social: false,
+    seo: false,
+    contact: false,
+  });
 
-  // Fetch settings
   const {
     data,
     isLoading,
@@ -96,98 +112,12 @@ export default function SettingsPage() {
 
   const settings = data?.data;
 
-  // Form
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-    setValue,
-  } = useForm<SettingsFormData>({
-    resolver: zodResolver(settingsSchema),
-    defaultValues: {
-      storeName: '',
-      storeEmail: '',
-      storePhone: '',
-      storeAddress: '',
-      storeDescription: '',
-      currency: 'INR',
-      taxRate: 18,
-      codEnabled: true,
-      codFee: 0,
-      upiEnabled: true,
-      cardEnabled: true,
-      freeShippingThreshold: 5000,
-      standardShippingCost: 299,
-      expressShippingCost: 499,
-      internationalShippingEnabled: false,
-      facebook: '',
-      instagram: '',
-      youtube: '',
-      twitter: '',
-      metaTitle: '',
-      metaDescription: '',
-      metaKeywords: '',
-      googleAnalyticsId: '',
-      contactEmail: '',
-      contactPhone: '',
-      contactAddress: '',
-      whatsappNumber: '',
-    },
-  });
-
-  // Populate form when settings load
-  useEffect(() => {
-    if (settings) {
-      reset({
-        storeName: settings.storeName || '',
-        storeEmail: settings.storeEmail || '',
-        storePhone: settings.storePhone || '',
-        storeAddress: settings.storeAddress || '',
-        storeDescription: settings.storeDescription || '',
-        currency: settings.currency || 'INR',
-        taxRate: settings.taxRate || 18,
-        codEnabled: settings.codEnabled !== undefined ? settings.codEnabled : true,
-        codFee: settings.codFee || 0,
-        upiEnabled: settings.upiEnabled !== undefined ? settings.upiEnabled : true,
-        cardEnabled: settings.cardEnabled !== undefined ? settings.cardEnabled : true,
-        freeShippingThreshold: settings.freeShippingThreshold || 5000,
-        standardShippingCost: settings.standardShippingCost || 299,
-        expressShippingCost: settings.expressShippingCost || 499,
-        internationalShippingEnabled: settings.internationalShippingEnabled || false,
-        facebook: settings.facebook || '',
-        instagram: settings.instagram || '',
-        youtube: settings.youtube || '',
-        twitter: settings.twitter || '',
-        metaTitle: settings.metaTitle || '',
-        metaDescription: settings.metaDescription || '',
-        metaKeywords: settings.metaKeywords || '',
-        googleAnalyticsId: settings.googleAnalyticsId || '',
-        contactEmail: settings.contactEmail || '',
-        contactPhone: settings.contactPhone || '',
-        contactAddress: settings.contactAddress || '',
-        whatsappNumber: settings.whatsappNumber || '',
-      });
-    }
-  }, [settings, reset]);
-
-  // Update mutation
-  const updateMutation = useMutation({
-    mutationFn: (data: SettingsFormData) => adminApi.updateSettings(data),
-    onSuccess: () => {
-      toast.success('Settings updated successfully');
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Failed to update settings');
-    },
-  });
-
-  const onSubmit = (data: SettingsFormData) => {
-    updateMutation.mutate(data);
+  const setTabPending = (tab: string, pending: boolean) => {
+    setPendingByTab((prev) =>
+      prev[tab] === pending ? prev : { ...prev, [tab]: pending }
+    );
   };
 
-  // Tabs configuration
   const tabs = [
     { id: 'store', label: 'Store', icon: Store },
     { id: 'payment', label: 'Payment', icon: CreditCard },
@@ -197,7 +127,8 @@ export default function SettingsPage() {
     { id: 'contact', label: 'Contact', icon: Mail },
   ];
 
-  // Loading skeleton
+  const activeTabPending = pendingByTab[activeTab];
+
   if (isLoading) {
     return <SettingsSkeleton />;
   }
@@ -222,11 +153,12 @@ export default function SettingsPage() {
             <RefreshCw className="w-4 h-4 text-brown-light dark:text-ivory/50" />
           </button>
           <button
-            onClick={handleSubmit(onSubmit)}
-            disabled={isSubmitting || updateMutation.isPending}
+            type="submit"
+            form={`${activeTab}-settings-form`}
+            disabled={activeTabPending}
             className="btn-gold inline-flex items-center gap-2 text-sm px-6 py-2.5"
           >
-            {isSubmitting || updateMutation.isPending ? (
+            {activeTabPending ? (
               <Loader2 className="w-4 h-4 animate-spin" />
             ) : (
               <Save className="w-4 h-4" />
@@ -237,70 +169,112 @@ export default function SettingsPage() {
       </div>
 
       {/* Tabs */}
-     <div className="flex flex-wrap gap-2 border-b border-gold/10 pb-3">
-  {tabs.map((tab) => {
-    const Icon = tab.icon;
-    const isActive = activeTab === tab.id;
+      <div className="flex flex-wrap gap-2 border-b border-gold/10 pb-3">
+        {tabs.map((tab) => {
+          const Icon = tab.icon;
+          const isActive = activeTab === tab.id;
 
-    return (
-      <button
-        key={tab.id}
-        onClick={() => setActiveTab(tab.id)}
-        className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
-          isActive
-            ? 'bg-gold text-white shadow-sm'
-            : 'text-black dark:text-black hover:bg-gold/10 hover:text-gold-dark'
-        }`}
-      >
-        <Icon className="w-4 h-4" />
-        {tab.label}
-      </button>
-    );
-  })}
-</div>
+          return (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
+                isActive
+                  ? 'bg-gold text-white shadow-sm'
+                  : 'text-black dark:text-black hover:bg-gold/10 hover:text-gold-dark'
+              }`}
+            >
+              <Icon className="w-4 h-4" />
+              {tab.label}
+            </button>
+          );
+        })}
+      </div>
 
-      {/* Forms */}
-      <form className="space-y-6">
-        {/* Store Settings */}
-        {activeTab === 'store' && (
-          <StoreSettings register={register} errors={errors} />
-        )}
-
-        {/* Payment Settings */}
-        {activeTab === 'payment' && (
-          <PaymentSettings register={register} errors={errors} setValue={setValue} />
-        )}
-
-        {/* Shipping Settings */}
-        {activeTab === 'shipping' && (
-          <ShippingSettings register={register} errors={errors} setValue={setValue} />
-        )}
-
-        {/* Social Settings */}
-        {activeTab === 'social' && (
-          <SocialSettings register={register} errors={errors} />
-        )}
-
-        {/* SEO Settings */}
-        {activeTab === 'seo' && (
-          <SEOSettings register={register} errors={errors} />
-        )}
-
-        {/* Contact Settings */}
-        {activeTab === 'contact' && (
-          <ContactSettings register={register} errors={errors} />
-        )}
-      </form>
+      {/* Forms - only the active tab's form is rendered/mounted */}
+      {activeTab === 'store' && (
+        <StoreSettings settings={settings} onPendingChange={(p) => setTabPending('store', p)} />
+      )}
+      {activeTab === 'payment' && (
+        <PaymentSettings settings={settings} onPendingChange={(p) => setTabPending('payment', p)} />
+      )}
+      {activeTab === 'shipping' && (
+        <ShippingSettings settings={settings} onPendingChange={(p) => setTabPending('shipping', p)} />
+      )}
+      {activeTab === 'social' && (
+        <SocialSettings settings={settings} onPendingChange={(p) => setTabPending('social', p)} />
+      )}
+      {activeTab === 'seo' && (
+        <SEOSettings settings={settings} onPendingChange={(p) => setTabPending('seo', p)} />
+      )}
+      {activeTab === 'contact' && (
+        <ContactSettings settings={settings} onPendingChange={(p) => setTabPending('contact', p)} />
+      )}
     </div>
   );
 }
 
 // ============================================================
-// Store Settings Component
+// Store Settings (own form, own schema, own submit)
 // ============================================================
-function StoreSettings({ register, errors }: any) {
+function StoreSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<StoreFormData>({
+    resolver: zodResolver(storeSchema),
+    defaultValues: {
+      storeName: '',
+      storeEmail: '',
+      storePhone: '',
+      storeAddress: '',
+      storeDescription: '',
+      currency: 'INR',
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        storeName: settings.storeName || '',
+        storeEmail: settings.storeEmail || '',
+        storePhone: settings.storePhone || '',
+        storeAddress: settings.storeAddress || '',
+        storeDescription: settings.storeDescription || '',
+        currency: settings.currency || 'INR',
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: StoreFormData) => adminApi.updateStoreSettings(data),
+    onSuccess: () => {
+      toast.success('Store settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update store settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: StoreFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="store-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           General Information
@@ -374,16 +348,69 @@ function StoreSettings({ register, errors }: any) {
           />
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 
 // ============================================================
-// Payment Settings Component
+// Payment Settings (own form, own schema, own submit)
 // ============================================================
-function PaymentSettings({ register, errors, setValue }: any) {
+function PaymentSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<PaymentFormData>({
+    resolver: zodResolver(paymentSchema),
+    defaultValues: {
+      taxRate: 18,
+      codEnabled: true,
+      codFee: 0,
+      upiEnabled: true,
+      cardEnabled: true,
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        taxRate: settings.taxRate || 18,
+        codEnabled: settings.codEnabled !== undefined ? settings.codEnabled : true,
+        codFee: settings.codFee || 0,
+        upiEnabled: settings.upiEnabled !== undefined ? settings.upiEnabled : true,
+        cardEnabled: settings.cardEnabled !== undefined ? settings.cardEnabled : true,
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: PaymentFormData) => adminApi.updatePaymentSettings(data),
+    onSuccess: () => {
+      toast.success('Payment settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update payment settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: PaymentFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="payment-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           Payment Configuration
@@ -405,7 +432,7 @@ function PaymentSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              COD Fee ()
+              COD Fee (₹)
             </label>
             <Input
               {...register('codFee', { valueAsNumber: true })}
@@ -442,16 +469,66 @@ function PaymentSettings({ register, errors, setValue }: any) {
           </label>
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 
 // ============================================================
-// Shipping Settings Component
+// Shipping Settings (own form, own schema, own submit)
 // ============================================================
-function ShippingSettings({ register, errors, setValue }: any) {
+function ShippingSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+  } = useForm<ShippingFormData>({
+    resolver: zodResolver(shippingSchema),
+    defaultValues: {
+      freeShippingThreshold: 5000,
+      standardShippingCost: 299,
+      expressShippingCost: 499,
+      internationalShippingEnabled: false,
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        freeShippingThreshold: settings.freeShippingThreshold || 5000,
+        standardShippingCost: settings.standardShippingCost || 299,
+        expressShippingCost: settings.expressShippingCost || 499,
+        internationalShippingEnabled: settings.internationalShippingEnabled || false,
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: ShippingFormData) => adminApi.updateShippingSettings(data),
+    onSuccess: () => {
+      toast.success('Shipping settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update shipping settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: ShippingFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="shipping-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           Shipping Configuration
@@ -459,7 +536,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Free Shipping Threshold ()
+              Free Shipping Threshold (₹)
             </label>
             <Input
               {...register('freeShippingThreshold', { valueAsNumber: true })}
@@ -469,7 +546,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Standard Shipping ()
+              Standard Shipping (₹)
             </label>
             <Input
               {...register('standardShippingCost', { valueAsNumber: true })}
@@ -479,7 +556,7 @@ function ShippingSettings({ register, errors, setValue }: any) {
           </div>
           <div>
             <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Express Shipping ()
+              Express Shipping (₹)
             </label>
             <Input
               {...register('expressShippingCost', { valueAsNumber: true })}
@@ -499,16 +576,62 @@ function ShippingSettings({ register, errors, setValue }: any) {
           </label>
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 
 // ============================================================
-// Social Settings Component
+// Social Settings (own form, own schema, own submit)
 // ============================================================
-function SocialSettings({ register, errors }: any) {
+function SocialSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const { register, handleSubmit, reset } = useForm<SocialFormData>({
+    resolver: zodResolver(socialSchema),
+    defaultValues: {
+      facebook: '',
+      instagram: '',
+      youtube: '',
+      twitter: '',
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        facebook: settings.facebook || '',
+        instagram: settings.instagram || '',
+        youtube: settings.youtube || '',
+        twitter: settings.twitter || '',
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: SocialFormData) => adminApi.updateSocialSettings(data),
+    onSuccess: () => {
+      toast.success('Social settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update social settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: SocialFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="social-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           Social Media Links
@@ -540,16 +663,62 @@ function SocialSettings({ register, errors }: any) {
           </div>
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 
 // ============================================================
-// SEO Settings Component
+// SEO Settings (own form, own schema, own submit)
 // ============================================================
-function SEOSettings({ register, errors }: any) {
+function SEOSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const { register, handleSubmit, reset } = useForm<SEOFormData>({
+    resolver: zodResolver(seoSchema),
+    defaultValues: {
+      metaTitle: '',
+      metaDescription: '',
+      metaKeywords: '',
+      googleAnalyticsId: '',
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        metaTitle: settings.metaTitle || '',
+        metaDescription: settings.metaDescription || '',
+        metaKeywords: settings.metaKeywords || '',
+        googleAnalyticsId: settings.googleAnalyticsId || '',
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: SEOFormData) => adminApi.updateSEOSettings(data),
+    onSuccess: () => {
+      toast.success('SEO settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update SEO settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: SEOFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="seo-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           SEO Settings
@@ -594,16 +763,67 @@ function SEOSettings({ register, errors }: any) {
           </div>
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 
 // ============================================================
-// Contact Settings Component
+// Contact Settings (own form, own schema, own submit)
 // ============================================================
-function ContactSettings({ register, errors }: any) {
+function ContactSettings({
+  settings,
+  onPendingChange,
+}: {
+  settings: any;
+  onPendingChange: (pending: boolean) => void;
+}) {
+  const queryClient = useQueryClient();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormData>({
+    resolver: zodResolver(contactSchema),
+    defaultValues: {
+      contactEmail: '',
+      contactPhone: '',
+      contactAddress: '',
+      whatsappNumber: '',
+    },
+  });
+
+  useEffect(() => {
+    if (settings) {
+      reset({
+        contactEmail: settings.contactEmail || '',
+        contactPhone: settings.contactPhone || '',
+        contactAddress: settings.contactAddress || '',
+        whatsappNumber: settings.whatsappNumber || '',
+      });
+    }
+  }, [settings, reset]);
+
+  const mutation = useMutation({
+    mutationFn: (data: ContactFormData) => adminApi.updateContactSettings(data),
+    onSuccess: () => {
+      toast.success('Contact settings updated successfully');
+      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
+    },
+    onError: (error: any) => {
+      toast.error(error?.message || 'Failed to update contact settings');
+    },
+  });
+
+  useEffect(() => {
+    onPendingChange(mutation.isPending);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mutation.isPending]);
+
+  const onSubmit = (data: ContactFormData) => mutation.mutate(data);
+
   return (
-    <div className="space-y-4">
+    <form id="contact-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <GlassCard>
         <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
           Contact Information
@@ -653,7 +873,7 @@ function ContactSettings({ register, errors }: any) {
           </div>
         </div>
       </GlassCard>
-    </div>
+    </form>
   );
 }
 

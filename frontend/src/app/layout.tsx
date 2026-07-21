@@ -71,7 +71,7 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
+    title: 'Pandit Ji Marble Murti Arts - Handcrafted Divine Sculptures',
     description:
       'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh.',
     images: ['https://images.unsplash.com/photo-1584925906119-eaf7bbd206c3?w=1200&q=80'],
