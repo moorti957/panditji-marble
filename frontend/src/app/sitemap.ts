@@ -1,7 +1,7 @@
 import { MetadataRoute } from "next";
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = "https://panditjimarblemurtiarts.in";
+  const baseUrl = "https://www.panditjimarblemurtiarts.in";
 
   const currentDate = new Date();
 

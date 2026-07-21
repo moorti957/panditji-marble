@@ -50,13 +50,13 @@ export const metadata: Metadata = {
   publisher: 'Pandit Ji Marble Murti Arts',
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://panditjimarblemurtiarts.in',
+    canonical: 'https://www.panditjimarblemurtiarts.in',
   },
   openGraph: {
     title: 'Pandit Ji Marble Murti Arts – Handcrafted Divine Sculptures',
     description:
-      'Handcrafted marble, brass, and wood murtis by master artisans in govindgarh.',
-    url: 'https://panditjimarblemurtiarts.in',
+      'Handcrafted marble, brass, and wood murtis by master artisans in Govindgarh.',
+    url: 'https://www.panditjimarblemurtiarts.in',
     siteName: 'Pandit Ji Marble Murti Arts',
     images: [
       {
