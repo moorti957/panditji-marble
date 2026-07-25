@@ -42,6 +42,7 @@ import { useProduct } from '@/features/products/hooks/useProduct';
 import { useRelatedProducts } from '@/features/products/hooks/useRelatedProducts';
 import { useReviews } from '@/features/reviews/hooks/useReviews';
 import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { logProductView } from '@/features/activity/api/activityApi';
 
 // Utils
 import { formatPrice } from '@/lib/utils';
@@ -93,20 +94,19 @@ export default function ProductDetailPage() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  // Reset quantity/selected image when the product identity changes.
-  // Adjusted during render (not in an effect) per React's recommended
-  // pattern for resetting state when a prop/derived value changes.
- const prevProductId = useRef<string | null>(null);
+  // Reset quantity/selected image & track product view when the product identity changes.
+  const prevProductId = useRef<string | null>(null);
 
-useEffect(() => {
-  if (!product?.id) return;
+  useEffect(() => {
+    if (!product?.id) return;
 
-  if (prevProductId.current !== product.id) {
-    prevProductId.current = product.id;
-    setQuantity(1);
-    setSelectedImage(0);
-  }
-}, [product?.id]);
+    if (prevProductId.current !== product.id) {
+      prevProductId.current = product.id;
+      setQuantity(1);
+      setSelectedImage(0);
+      logProductView(product.id);
+    }
+  }, [product?.id]);
 
   // Loading state
   if (isLoading) {
@@ -129,7 +129,6 @@ useEffect(() => {
   // Add to cart handler
   const handleAddToCart = () => {
     addItem(product, quantity);
-    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
   };
 
   // Wishlist toggle
@@ -380,7 +379,6 @@ useEffect(() => {
                 <Shield className="w-4 h-4" />
                 <span>Authentic</span>
               </div>
-             
             </div>
 
             {/* Action Buttons */}

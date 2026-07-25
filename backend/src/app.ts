@@ -17,11 +17,13 @@ import productRoutes from './routes/product.routes';
 import categoryRoutes from './routes/category.routes';
 import orderRoutes from './routes/order.routes';
 import userRoutes from './routes/user.routes';
+import activityRoutes from './routes/activity.routes';
 import uploadRoutes from './routes/upload.routes';
 import dashboardRoutes from './routes/dashboard.routes';
 import homeRoutes from './routes/home.routes';
 import settingsRoutes from './routes/settings.routes';
 import paymentRoutes from './routes/payment.routes';
+import shippingRoutes from './routes/shipping.routes';
 
 // Middleware
 import { notFound, errorHandler } from './middlewares/errorHandler';
@@ -116,11 +118,13 @@ app.use('/api/products', productRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/users', userRoutes);
+app.use('/api/activity', activityRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/dashboard', dashboardRoutes);
 app.use('/api/home', homeRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/payment', paymentRoutes);
+app.use('/api/shipping', shippingRoutes);
 
 // ============================================================
 // 404 Not Found Handler

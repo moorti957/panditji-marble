@@ -2,6 +2,7 @@
 
 import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
+import { logFavorite } from '@/features/activity/api/activityApi';
 
 import type { Product } from '@/features/products/types/product.types';
 
@@ -48,18 +49,21 @@ export const useWishlistStore = create<WishlistState>()(
       items: [],
 
       addItem: (product: Product) => {
-        set((state) => {
-          if (state.items.some((item) => item.id === product.id)) {
-            return state;
-          }
-          return { items: [...state.items, product] };
-        });
+        if (get().items.some((item) => item.id === product.id)) {
+          return;
+        }
+        set((state) => ({ items: [...state.items, product] }));
+        logFavorite(product.id, 'added');
       },
 
       removeItem: (productId: string) => {
+        if (!get().items.some((item) => item.id === productId)) {
+          return;
+        }
         set((state) => ({
           items: state.items.filter((item) => item.id !== productId),
         }));
+        logFavorite(productId, 'removed');
       },
 
       toggleItem: (product: Product) => {

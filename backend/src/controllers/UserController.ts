@@ -3,11 +3,12 @@
 import { Response } from 'express';
 import { AuthRequest } from '../middlewares/auth';
 import mongoose from 'mongoose';
-import bcrypt from 'bcryptjs';
-import { User, IUser } from '../models/User';
+import { User } from '../models/User';
 import { Order } from '../models/Order';
-import { Review } from '../models/Review';
-import { uploadToCloudinary, deleteFromCloudinary } from '../config/cloudinary';
+import { ProductClick } from '../models/ProductClick';
+import { SearchHistory } from '../models/SearchHistory';
+import { FavoriteActivity } from '../models/FavoriteActivity';
+import { CartActivity } from '../models/CartActivity';
 
 export class UserController {
   /**
@@ -393,11 +394,8 @@ export class UserController {
    */
   static async getUserById(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
-
-      const user = await User.findById(id)
-        .select('-password -resetPasswordToken -resetPasswordExpires')
-        .populate('orders');
+      const userId = req.params.id;
+      const user = await User.findById(userId).select('-password -resetPasswordToken -resetPasswordExpires');
 
       if (!user) {
         return res.status(404).json({
@@ -406,40 +404,23 @@ export class UserController {
         });
       }
 
-      // Get user stats
-      const orderStats = await Order.aggregate([
-        { $match: { user: new mongoose.Types.ObjectId(id) } },
-        {
-          $group: {
-            _id: null,
-            totalOrders: { $sum: 1 },
-            totalSpent: { $sum: '$grandTotal' },
-            averageOrderValue: { $avg: '$grandTotal' },
-          },
-        },
-      ]);
-
-      const reviewCount = await Review.countDocuments({ user: id });
-
       return res.json({
         success: true,
-        data: {
-          ...user.toObject(),
-          stats: {
-            totalOrders: orderStats[0]?.totalOrders || 0,
-            totalSpent: orderStats[0]?.totalSpent || 0,
-            averageOrderValue: orderStats[0]?.averageOrderValue || 0,
-            reviewCount,
-          },
-        },
+        data: user,
       });
-    } catch (error) {
-      console.error('Get user by ID error:', error);
-      return res.status(500).json({
-        success: false,
-        message: 'Internal server error',
-      });
-    }
+    } catch (error: any) {
+  console.error("========== FULL ERROR ==========");
+  console.error(error);
+  console.error(error.stack);
+  console.error("NAME:", error.name);
+  console.error("MESSAGE:", error.message);
+  console.error("================================");
+
+  return res.status(500).json({
+    success: false,
+    message: error.message,
+  });
+}
   }
 
   /**
@@ -447,29 +428,19 @@ export class UserController {
    */
   static async updateUserRole(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const userId = req.params.id;
       const { role } = req.body;
 
-      // Prevent self-demotion (optional)
-      if (id === req.user?.id) {
-        return res.status(400).json({
-          success: false,
-          message: 'You cannot change your own role',
-        });
-      }
-
-      const user = await User.findByIdAndUpdate(
-        id,
-        { role },
-        { new: true, runValidators: true }
-      ).select('-password -resetPasswordToken -resetPasswordExpires');
-
+      const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({
           success: false,
           message: 'User not found',
         });
       }
+
+      user.role = role;
+      await user.save();
 
       return res.json({
         success: true,
@@ -490,23 +461,10 @@ export class UserController {
    */
   static async updateUserStatus(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const userId = req.params.id;
       const { isActive } = req.body;
 
-      // Prevent self-deactivation
-      if (id === req.user?.id && isActive === false) {
-        return res.status(400).json({
-          success: false,
-          message: 'You cannot deactivate your own account',
-        });
-      }
-
-      const user = await User.findByIdAndUpdate(
-        id,
-        { isActive },
-        { new: true, runValidators: true }
-      ).select('-password -resetPasswordToken -resetPasswordExpires');
-
+      const user = await User.findById(userId);
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -514,9 +472,12 @@ export class UserController {
         });
       }
 
+      user.isActive = isActive;
+      await user.save();
+
       return res.json({
         success: true,
-        message: `User ${isActive ? 'activated' : 'deactivated'} successfully`,
+        message: 'User status updated successfully',
         data: user,
       });
     } catch (error) {
@@ -529,21 +490,13 @@ export class UserController {
   }
 
   /**
-   * Delete a user (admin only)
+   * Delete user (admin only)
    */
   static async deleteUser(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
+      const userId = req.params.id;
+      const user = await User.findById(userId);
 
-      // Prevent self-deletion
-      if (id === req.user?.id) {
-        return res.status(400).json({
-          success: false,
-          message: 'You cannot delete your own account',
-        });
-      }
-
-      const user = await User.findById(id);
       if (!user) {
         return res.status(404).json({
           success: false,
@@ -551,7 +504,6 @@ export class UserController {
         });
       }
 
-      // Soft delete
       user.isActive = false;
       user.deletedAt = new Date();
       await user.save();
@@ -575,19 +527,7 @@ export class UserController {
   static async bulkDeleteUsers(req: AuthRequest, res: Response): Promise<Response> {
     try {
       const { ids } = req.body;
-
-      // Prevent self-deletion
-      if (ids.includes(req.user?.id)) {
-        return res.status(400).json({
-          success: false,
-          message: 'You cannot delete your own account',
-        });
-      }
-
-      await User.updateMany(
-        { _id: { $in: ids } },
-        { isActive: false, deletedAt: new Date() }
-      );
+      await User.updateMany({ _id: { $in: ids } }, { isActive: false, deletedAt: new Date() });
 
       return res.json({
         success: true,
@@ -607,37 +547,16 @@ export class UserController {
    */
   static async getUserStats(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const [
-        totalUsers,
-        activeUsers,
-        newUsersThisMonth,
-        usersByRole,
-        emailVerified,
-      ] = await Promise.all([
-        User.countDocuments(),
-        User.countDocuments({ isActive: true }),
-        User.countDocuments({
-          createdAt: { $gte: new Date(new Date().setDate(1)) },
-        }),
-        User.aggregate([
-          { $group: { _id: '$role', count: { $sum: 1 } } },
-        ]),
-        User.countDocuments({ emailVerified: true }),
-      ]);
+      const totalUsers = await User.countDocuments();
+      const activeUsers = await User.countDocuments({ isActive: true });
+      const adminUsers = await User.countDocuments({ role: { $in: ['admin', 'super-admin'] } });
 
       return res.json({
         success: true,
         data: {
           totalUsers,
           activeUsers,
-          inactiveUsers: totalUsers - activeUsers,
-          newUsersThisMonth,
-          emailVerified,
-          emailUnverified: totalUsers - emailVerified,
-          usersByRole: usersByRole.reduce((acc, item) => {
-            acc[item._id] = item.count;
-            return acc;
-          }, {}),
+          adminUsers,
         },
       });
     } catch (error) {
@@ -654,27 +573,57 @@ export class UserController {
    */
   static async getUserActivity(req: AuthRequest, res: Response): Promise<Response> {
     try {
-      const { id } = req.params;
-      const { page = 1, limit = 20 } = req.query;
+      const userId = req.params.id;
+      const page = Number(req.query.page) || 1;
+      const limit = Math.min(Number(req.query.limit) || 20, 50);
 
-      // In a real implementation, you'd have an ActivityLog model
-      // For now, we'll return order activity
-      const orders = await Order.find({ user: id })
-        .sort({ createdAt: -1 })
-        .skip((Number(page) - 1) * Number(limit))
-        .limit(Number(limit))
-        .select('orderNumber status grandTotal createdAt');
+      const [orders, productClicks, searchHistory, favoriteActivities, cartActivities, totalOrders] =
+        await Promise.all([
+          Order.find({ user: userId })
+            .sort({ createdAt: -1 })
+            .skip((page - 1) * limit)
+            .limit(limit),
+          ProductClick.find({ user: userId })
+            .sort({ lastClickedAt: -1 })
+            .limit(limit)
+            .populate('product', 'name slug'),
+          SearchHistory.find({ user: userId })
+            .sort({ createdAt: -1 })
+            .limit(limit),
+          FavoriteActivity.find({ user: userId })
+            .sort({ timestamp: -1 })
+            .limit(limit)
+            .populate('product', 'name slug'),
+          CartActivity.find({ user: userId })
+            .sort({ timestamp: -1 })
+            .limit(limit)
+            .populate('product', 'name slug'),
+          Order.countDocuments({ user: userId }),
+        ]);
 
-      const total = await Order.countDocuments({ user: id });
+      const totalClicks = await ProductClick.countDocuments({ user: userId });
+      const totalSearches = await SearchHistory.countDocuments({ user: userId });
+      const totalFavorites = await FavoriteActivity.countDocuments({ user: userId });
+      const totalCartActions = await CartActivity.countDocuments({ user: userId });
 
       return res.json({
         success: true,
         data: {
-          activities: orders,
-          total,
-          page: Number(page),
-          limit: Number(limit),
-          totalPages: Math.ceil(total / Number(limit)),
+          orders,
+          productClicks,
+          searchHistory,
+          favoriteActivities,
+          cartActivities,
+          totals: {
+            orders: totalOrders,
+            productClicks: totalClicks,
+            searchHistory: totalSearches,
+            favoriteActivities: totalFavorites,
+            cartActivities: totalCartActions,
+          },
+          page,
+          limit,
+          totalPages: Math.ceil(totalOrders / limit),
         },
       });
     } catch (error) {

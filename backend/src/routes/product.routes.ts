@@ -4,9 +4,10 @@ import { Router } from 'express';
 import { body, param, query } from 'express-validator';
 import rateLimit from 'express-rate-limit';
 import multer from 'multer';
+import mongoose from 'mongoose';
 import { ProductController } from '../controllers/ProductController';
 import { validate } from '../middlewares/validate';
-import { auth,  } from '../middlewares/auth';
+import { auth } from '../middlewares/auth';
 
 import { upload } from '../middlewares/upload';
 
@@ -32,6 +33,12 @@ const customRequestLimiter = rateLimit({
 
 const productIdParamValidation = [
   param('id').isMongoId().withMessage('Invalid product ID'),
+];
+
+const productIdOrSlugValidation = [
+  param('id')
+    .custom((value) => mongoose.isValidObjectId(value) || (typeof value === 'string' && value.trim().length > 0))
+    .withMessage('Invalid product ID or slug'),
 ];
 
 const productSlugParamValidation = [
@@ -158,22 +165,6 @@ router.get(
   ProductController.getAll
 );
 
-// Get product by slug
-router.get(
-  '/:slug',
-  productSlugParamValidation,
-  validate,
-  ProductController.getBySlug
-);
-
-// Get product by ID
-router.get(
-  '/id/:id',
-  productIdParamValidation,
-  validate,
-  ProductController.getById
-);
-
 // Get featured products
 router.get(
   '/featured',
@@ -204,15 +195,6 @@ router.get(
   query('limit').optional().isInt({ min: 1, max: 20 }),
   validate,
   ProductController.getTrending
-);
-
-// Get related products
-router.get(
-  '/:id/related',
-  productIdParamValidation,
-  query('limit').optional().isInt({ min: 1, max: 10 }),
-  validate,
-  ProductController.getRelated
 );
 
 // Get product categories (list with counts)
@@ -252,6 +234,22 @@ router.get(
   ProductController.compare
 );
 
+// Recently viewed products (requires authentication)
+router.get(
+  '/recently-viewed',
+  auth,
+  ProductController.getRecentlyViewed
+);
+
+// Get related products
+router.get(
+  '/:id/related',
+  productIdParamValidation,
+  query('limit').optional().isInt({ min: 1, max: 10 }),
+  validate,
+  ProductController.getRelated
+);
+
 // Check product availability
 router.get(
   '/:id/availability',
@@ -279,6 +277,22 @@ router.post(
   ProductController.submitReview
 );
 
+// Track product view (public, no validation needed)
+router.post(
+  '/:id/view',
+  productIdParamValidation,
+  validate,
+  ProductController.trackView
+);
+
+// Get product by ID
+router.get(
+  '/id/:id',
+  productIdParamValidation,
+  validate,
+  ProductController.getById
+);
+
 // Custom murti request (public, with rate limit)
 router.post(
   '/custom-request',
@@ -288,20 +302,16 @@ router.post(
   ProductController.customRequest
 );
 
-// Track product view (public, no validation needed)
-router.post(
-  '/:id/view',
-  productIdParamValidation,
+// Get product by slug
+router.get(
+  '/:slug',
+  productSlugParamValidation,
   validate,
-  ProductController.trackView
+  ProductController.getBySlug
 );
 
-// Recently viewed products (requires authentication)
-router.get(
-  '/recently-viewed',
-  auth,
-  ProductController.getRecentlyViewed
-);
+
+
 
 // ============================================================
 // Admin Routes (require authentication + admin role)

@@ -48,9 +48,6 @@ const paymentSchema = z.object({
 type PaymentFormData = z.input<typeof paymentSchema>;
 
 const shippingSchema = z.object({
-  freeShippingThreshold: z.number().min(0).default(5000),
-  standardShippingCost: z.number().min(0).default(299),
-  expressShippingCost: z.number().min(0).default(499),
   internationalShippingEnabled: z.boolean().default(false),
 });
 type ShippingFormData = z.input<typeof shippingSchema>;
@@ -474,7 +471,7 @@ function PaymentSettings({
 }
 
 // ============================================================
-// Shipping Settings (own form, own schema, own submit)
+// Shipping Settings – Automated (No Manual Price Inputs)
 // ============================================================
 function ShippingSettings({
   settings,
@@ -483,97 +480,64 @@ function ShippingSettings({
   settings: any;
   onPendingChange: (pending: boolean) => void;
 }) {
-  const queryClient = useQueryClient();
-  const {
-    register,
-    handleSubmit,
-    reset,
-  } = useForm<ShippingFormData>({
-    resolver: zodResolver(shippingSchema),
-    defaultValues: {
-      freeShippingThreshold: 5000,
-      standardShippingCost: 299,
-      expressShippingCost: 499,
-      internationalShippingEnabled: false,
-    },
-  });
-
-  useEffect(() => {
-    if (settings) {
-      reset({
-        freeShippingThreshold: settings.freeShippingThreshold || 5000,
-        standardShippingCost: settings.standardShippingCost || 299,
-        expressShippingCost: settings.expressShippingCost || 499,
-        internationalShippingEnabled: settings.internationalShippingEnabled || false,
-      });
-    }
-  }, [settings, reset]);
-
-  const mutation = useMutation({
-    mutationFn: (data: ShippingFormData) => adminApi.updateShippingSettings(data),
-    onSuccess: () => {
-      toast.success('Shipping settings updated successfully');
-      queryClient.invalidateQueries({ queryKey: ['admin', 'settings'] });
-    },
-    onError: (error: any) => {
-      toast.error(error?.message || 'Failed to update shipping settings');
-    },
-  });
-
-  useEffect(() => {
-    onPendingChange(mutation.isPending);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mutation.isPending]);
-
-  const onSubmit = (data: ShippingFormData) => mutation.mutate(data);
-
+  // Shipping is now fully automatic — no manual prices needed.
+  // Inform admin about the automatic shipping system.
   return (
-    <form id="shipping-settings-form" onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+    <form id="shipping-settings-form" onSubmit={(e) => e.preventDefault()} className="space-y-4">
       <GlassCard>
-        <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-4">
+        <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory mb-2">
           Shipping Configuration
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div>
-            <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Free Shipping Threshold (₹)
-            </label>
-            <Input
-              {...register('freeShippingThreshold', { valueAsNumber: true })}
-              type="number"
-              placeholder="5000"
-            />
+        <p className="text-sm text-black dark:text-black mb-4">
+          Shipping charges are now calculated <strong>automatically</strong> based on the customer&apos;s delivery
+          address, total product weight, and road distance from the shop.
+        </p>
+
+        {/* Origin Info */}
+        <div className="bg-green-50 border border-green-200 rounded-xl p-4 mb-4">
+          <div className="flex items-center gap-2 mb-1">
+            <span className="text-green-600 text-lg">✅</span>
+            <span className="font-semibold text-green-800 text-sm">Automated Shipping Active</span>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Standard Shipping (₹)
-            </label>
-            <Input
-              {...register('standardShippingCost', { valueAsNumber: true })}
-              type="number"
-              placeholder="299"
-            />
+          <p className="text-xs text-green-700">All shipping charges are calculated dynamically per order.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="bg-sand/30 rounded-xl p-4">
+            <p className="text-xs font-medium text-black dark:text-black mb-1 uppercase tracking-wide">Shipping Origin</p>
+            <p className="text-sm font-semibold text-brown">Pandit Ji Marble Murti Arts</p>
+            <p className="text-xs text-brown-light">Govindgarh, Alwar, Rajasthan, India</p>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-black dark:text-black mb-1">
-              Express Shipping (₹)
-            </label>
-            <Input
-              {...register('expressShippingCost', { valueAsNumber: true })}
-              type="number"
-              placeholder="499"
-            />
+          <div className="bg-sand/30 rounded-xl p-4">
+            <p className="text-xs font-medium text-black dark:text-black mb-1 uppercase tracking-wide">Express Surcharge</p>
+            <p className="text-sm font-semibold text-brown">Order ≥ ₹10,000: +15%</p>
+            <p className="text-xs text-brown-light">Order &lt; ₹10,000: +25%</p>
+          </div>
+          <div className="bg-sand/30 rounded-xl p-4">
+            <p className="text-xs font-medium text-black dark:text-black mb-1 uppercase tracking-wide">Standard Delivery</p>
+            <p className="text-sm font-semibold text-brown">5–7 Business Days</p>
+          </div>
+          <div className="bg-sand/30 rounded-xl p-4">
+            <p className="text-xs font-medium text-black dark:text-black mb-1 uppercase tracking-wide">Express Delivery</p>
+            <p className="text-sm font-semibold text-brown">2–3 Business Days</p>
           </div>
         </div>
+
+        <div className="mt-4 bg-sand/20 rounded-xl p-4">
+          <p className="text-xs font-medium text-black dark:text-black mb-2 uppercase tracking-wide">Shipping Formula (Reference)</p>
+          <p className="text-xs text-brown-light font-mono bg-white/60 rounded px-3 py-2 inline-block">
+            Cost = 200 + (Distance × 4.0) + (Weight × 16.0) + (Distance × Weight × 0.1546)
+          </p>
+          <p className="text-xs text-brown-light mt-1">
+            Benchmark: 178 KM × 25 KG = <strong>₹2,000</strong>
+          </p>
+        </div>
+
         <div className="mt-4">
-          <label className="flex items-center gap-2 text-sm text-black dark:text-black cursor-pointer">
-            <input
-              type="checkbox"
-              {...register('internationalShippingEnabled')}
-              className="accent-gold w-4 h-4"
-            />
-            Enable International Shipping
-          </label>
+          <p className="text-xs text-brown-light">
+            To configure product weight, go to <strong>Products</strong> and edit each product&apos;s Weight (KG) field.
+            Shipping will be automatically calculated at checkout.
+          </p>
         </div>
       </GlassCard>
     </form>

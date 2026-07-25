@@ -3,6 +3,7 @@
 'use client';
 
 import { useState } from 'react';
+import Link from 'next/link';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import {
@@ -374,6 +375,14 @@ export default function UsersPage() {
               >
                 <Shield className="w-4 h-4" />
               </button>
+
+              <Link
+                href={`/users/${user._id}`}
+                className="p-1.5 rounded-lg hover:bg-sand/10 transition-colors text-black dark:text-black hover:text-gold-dark"
+                title="View details"
+              >
+                <ChevronRight className="w-4 h-4" />
+              </Link>
 
               <button
                 onClick={() => handleToggleStatus(user)}

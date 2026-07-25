@@ -185,6 +185,25 @@ router.get(
   UserController.getAllUsers
 );
 
+// Get user statistics (admin only)
+router.get(
+  '/stats',
+  auth,
+  // admin,
+  UserController.getUserStats
+);
+
+// Bulk delete users (admin only)
+router.delete(
+  '/bulk',
+  auth,
+  // admin,
+  body('ids').isArray().withMessage('IDs array is required'),
+  body('ids.*').isMongoId().withMessage('Invalid user ID'),
+  validate,
+  UserController.bulkDeleteUsers
+);
+
 // Get a specific user by ID (admin only)
 router.get(
   '/:id',
@@ -240,14 +259,6 @@ router.delete(
 // ============================================================
 // User Activity & Analytics (admin only)
 // ============================================================
-
-// Get user statistics (admin only)
-router.get(
-  '/stats',
-  auth,
-  // admin,
-  UserController.getUserStats
-);
 
 // Get user activity logs (admin only)
 router.get(

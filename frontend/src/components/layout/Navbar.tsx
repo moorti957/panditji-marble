@@ -7,6 +7,7 @@ import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
 import { AnimatePresence, motion } from 'framer-motion';
 import { toast } from '@/lib/notifications';
+import { logSearch } from '@/features/activity/api/activityApi';
 import {
   ChevronDown,
   Heart,
@@ -129,8 +130,10 @@ export default function Navbar() {
 
   const handleSearch = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
-    if (searchQuery.trim()) {
-      router.push(`/products?search=${encodeURIComponent(searchQuery.trim())}`);
+    const query = searchQuery.trim();
+    if (query) {
+      logSearch(query);
+      router.push(`/products?search=${encodeURIComponent(query)}`);
       setIsSearchOpen(false);
       setIsMobileMenuOpen(false);
       setSearchQuery('');

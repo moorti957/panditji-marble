@@ -6,6 +6,7 @@ import { Setting } from '../models/Setting';
 import { Order } from '../models/Order';
 import { Product } from '../models/Product';
 import { Coupon } from '../models/Coupon';
+import { ShippingService } from '../services/ShippingService';
 
 const razorpay = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID || '',
@@ -133,9 +134,36 @@ if (billingAddress?.phone) {
         });
       }
 
+      // Calculate dynamic shipping cost using ShippingService
+      // Based on customer address distance from Govindgarh, Alwar + total product weight
       let shippingCost = 0;
-      if (shippingMethod === 'standard') shippingCost = settings.shipping?.standard ?? settings.standardShippingCost ?? 500;
-      else if (shippingMethod === 'express') shippingCost = settings.shipping?.express ?? settings.expressShippingCost ?? 1200;
+      try {
+        const shippingItems = orderItems.map((oi: any, idx: number) => ({
+          productId: items[idx]?.productId,
+          quantity: oi.quantity,
+        }));
+        const shippingCalc = await ShippingService.calculateShipping(
+          shippingAddress,
+          shippingItems,
+          subtotal
+        );
+        shippingCost = shippingMethod === 'express'
+          ? shippingCalc.expressShippingCost
+          : shippingCalc.standardShippingCost;
+      } catch (shippingErr) {
+        // Fallback: calculate by weight with a generic distance of 300 KM
+        console.warn('Shipping calculation fallback in verify:', shippingErr);
+        const totalWeight = await ShippingService.calculateTotalWeight(
+          orderItems.map((oi: any, idx: number) => ({
+            productId: items[idx]?.productId,
+            quantity: oi.quantity,
+          }))
+        );
+        const fallbackStandard = ShippingService.calculateStandardShippingCost(300, totalWeight);
+        shippingCost = shippingMethod === 'express'
+          ? ShippingService.calculateExpressShippingCost(fallbackStandard, subtotal)
+          : fallbackStandard;
+      }
 
       const gstPercentage = settings.gstPercentage ?? settings.taxRate ?? 18;
       const tax = Math.round(subtotal * (Number(gstPercentage) / 100));

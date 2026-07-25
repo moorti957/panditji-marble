@@ -4,6 +4,7 @@ import { create } from 'zustand';
 import { persist, createJSONStorage } from 'zustand/middleware';
 import { immer } from 'zustand/middleware/immer';
 import { toast } from '@/lib/notifications';
+import { logCart } from '@/features/activity/api/activityApi';
 
 import type { Product } from '@/features/products/types/product.types';
 
@@ -246,12 +247,14 @@ export const useCartStore = create<CartState>()(
 
         // Toast notification
         toast.success('Added to Cart', 'Your selected murti has been added successfully.');
+
+        // Activity tracking (non-blocking)
+        logCart(product.id, 'added', quantity);
       },
 
       // === Remove item ===
       removeItem: (productId: string) => {
         set((state) => {
-          const item = state.items.find((i: CartItem) => i.product.id === productId);
           state.items = state.items.filter((item: CartItem) => item.product.id !== productId);
 
           // Recalculate totals
@@ -272,6 +275,9 @@ export const useCartStore = create<CartState>()(
         });
 
         toast.success('Removed from Cart', 'Item removed successfully.');
+
+        // Activity tracking (non-blocking)
+        logCart(productId, 'removed');
       },
 
       // === Update quantity ===

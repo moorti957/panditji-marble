@@ -11,6 +11,7 @@ import { toast } from '@/lib/notifications';
 
 import { useCartStore } from '@/features/cart/store/cartStore';
 import { useWishlistStore } from '@/features/wishlist/store/wishlistStore';
+import { logProductClick } from '@/features/activity/api/activityApi';
 import { formatPrice } from '@/lib/utils';
 import { cn } from '@/lib/utils';
 import type { Product } from '@/types';
@@ -40,23 +41,19 @@ export function ProductCard({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   const { addItem } = useCartStore();
- const toggleWishlist = useWishlistStore((state) => state.toggleItem);
+  const toggleWishlist = useWishlistStore((state) => state.toggleItem);
 
-const isInWishlist = useWishlistStore((state) => {
-  console.log(
-    "Card:",
-    product.name,
-    "Product ID:",
-    product.id,
-    "Wishlist IDs:",
-    state.items.map((i) => i.id)
-  );
-
-  return state.items.some((item) => item.id === product.id);
-});
+  const isInWishlist = useWishlistStore((state) => {
+    return state.items.some((item) => item.id === product.id);
+  });
   // Calculate average rating (mock)
   const avgRating = product.rating || 4.5;
   const reviewCount = product.reviewCount || 12;
+
+  // Track product card click
+  const handleProductCardClick = () => {
+    logProductClick(product.id);
+  };
 
   // Render stars
   const renderStars = (rating: number) => {
@@ -81,7 +78,6 @@ const isInWishlist = useWishlistStore((state) => {
     e.preventDefault();
     e.stopPropagation();
     addItem(product, 1);
-    toast.success('Added to Cart', 'Your selected murti has been added successfully.');
   };
 
   // Wishlist toggle handler
@@ -103,6 +99,7 @@ const isInWishlist = useWishlistStore((state) => {
   const handleQuickView = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
+    logProductClick(product.id);
     if (onQuickView) {
       onQuickView(product);
     } else {
@@ -135,7 +132,11 @@ const isInWishlist = useWishlistStore((state) => {
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
       >
-        <Link href={`/products/${product.slug}`} className="flex flex-col sm:flex-row">
+        <Link
+          href={`/products/${product.slug}`}
+          onClick={handleProductCardClick}
+          className="flex flex-col sm:flex-row"
+        >
           {/* Image */}
           <div className="relative sm:w-48 md:w-56 aspect-[4/3] sm:aspect-square bg-sand dark:bg-brown overflow-hidden shrink-0">
             <Image
@@ -168,11 +169,9 @@ const isInWishlist = useWishlistStore((state) => {
             <div>
               <div className="flex items-start justify-between">
                 <div>
-                  <Link href={`/products/${product.slug}`}>
-                    <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory group-hover:text-gold-dark dark:group-hover:text-gold transition-colors line-clamp-1">
-                      {product.name}
-                    </h3>
-                  </Link>
+                  <h3 className="font-cinzel text-lg font-semibold text-brown dark:text-ivory group-hover:text-gold-dark dark:group-hover:text-gold transition-colors line-clamp-1">
+                    {product.name}
+                  </h3>
                   <p className="text-sm text-brown-light dark:text-ivory/60 mt-0.5">
                     {product.material || 'Handcrafted'}
                   </p>
@@ -250,7 +249,11 @@ const isInWishlist = useWishlistStore((state) => {
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <Link href={`/products/${product.slug}`} className="block relative">
+      <Link
+        href={`/products/${product.slug}`}
+        onClick={handleProductCardClick}
+        className="block relative"
+      >
         {/* Image */}
         <div className="relative aspect-[3/4] bg-sand dark:bg-brown overflow-hidden">
           <Image

@@ -472,6 +472,11 @@
       return extractData(response);
     },
 
+    getUserActivity: async (id: string, params?: any): Promise<any> => {
+      const response = await apiClient.get<ApiResponse<any>>(`/users/${id}/activity`, { params });
+      return extractData(response);
+    },
+
     updateUserRole: async (id: string, role: string): Promise<any> => {
       const response = await apiClient.patch<ApiResponse<any>>(`/users/${id}/role`, { role });
       return extractData(response);
@@ -870,6 +875,8 @@
 
   // Users
   (adminApi as any).getUsers = (params?: any) => (adminApi as any).users.getUsers(params);
+  (adminApi as any).getUser = (id: string) => (adminApi as any).users.getUser(id);
+  (adminApi as any).getUserActivity = (id: string, params?: any) => (adminApi as any).users.getUserActivity(id, params);
   (adminApi as any).updateUserRole = (id: string, role: string) => (adminApi as any).users.updateUserRole(id, role);
   (adminApi as any).updateUserStatus = (id: string, isActive: boolean) => (adminApi as any).users.updateUserStatus(id, isActive);
   (adminApi as any).deleteUser = (id: string) => (adminApi as any).users.deleteUser(id);

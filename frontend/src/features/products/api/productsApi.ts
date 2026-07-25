@@ -1,6 +1,7 @@
 // frontend/src/features/products/api/productsApi.ts
 
 import { apiClient } from '@/services/apiClient';
+import { logProductView } from '@/features/activity/api/activityApi';
 import type {
   Product,
   ProductFilters,
@@ -85,15 +86,15 @@ export const productsApi = {
     const url = queryString ? `/products?${queryString}` : '/products';
     const response = await apiClient.get(url);
 
-const products = response.data.data.products.map((product: any) => ({
-  ...product,
-  id: product.id || product._id,
-}));
+    const products = response.data.data.products.map((product: any) => ({
+      ...product,
+      id: product.id || product._id,
+    }));
 
-return {
-  ...response.data.data,
-  products,
-};
+    return {
+      ...response.data.data,
+      products,
+    };
   },
 
   /**
@@ -250,7 +251,7 @@ return {
    * Track product view (for analytics)
    */
   trackView: async (productId: string): Promise<void> => {
-    await apiClient.post(`/products/${productId}/view`);
+    await logProductView(productId);
   },
 
   /**

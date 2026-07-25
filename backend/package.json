@@ -6,7 +6,7 @@
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
-    "dev": "nodemon src/server.ts",
+    "dev": "nodemon --exec ts-node src/server.ts",
     "lint": "eslint . --ext .ts",
     "format": "prettier --write ."
   },
@@ -27,6 +27,7 @@
     "multer": "1.4.5-lts.1",
     "nodemailer": "^6.9.1",
     "razorpay": "^2.9.6",
+    "socket.io": "^4.8.3",
     "uuid": "^9.0.0",
     "winston": "^3.19.0"
   },

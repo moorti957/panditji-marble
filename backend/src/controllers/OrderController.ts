@@ -7,6 +7,7 @@ import { Product } from '../models/Product';
 import { User } from '../models/User';
 import { Coupon } from '../models/Coupon';
 import { Setting } from '../models/Setting';
+import { ShippingService } from '../services/ShippingService';
 
 
 export class OrderController {
@@ -63,12 +64,35 @@ export class OrderController {
         });
       }
 
-      // Calculate shipping cost from settings
+      // Calculate dynamic shipping cost using ShippingService
+      // Shipping is calculated based on customer address, product weight and distance from Govindgarh, Alwar
       let shippingCost = 0;
-      if (shippingMethod === 'standard') {
-        shippingCost = settings.shipping?.standard ?? settings.standardShippingCost ?? 500;
-      } else if (shippingMethod === 'express') {
-        shippingCost = settings.shipping?.express ?? settings.expressShippingCost ?? 1200;
+      try {
+        const shippingItems = orderItems.map((oi: any, idx: number) => ({
+          productId: items[idx]?.productId,
+          quantity: oi.quantity,
+        }));
+        const shippingCalc = await ShippingService.calculateShipping(
+          shippingAddress,
+          shippingItems,
+          subtotal
+        );
+        shippingCost = shippingMethod === 'express'
+          ? shippingCalc.expressShippingCost
+          : shippingCalc.standardShippingCost;
+      } catch (shippingErr) {
+        // Fallback to formula-based estimate using weight only if address geocoding fails
+        console.warn('Shipping calculation fallback in createOrder:', shippingErr);
+        const totalWeight = await ShippingService.calculateTotalWeight(
+          orderItems.map((oi: any, idx: number) => ({
+            productId: items[idx]?.productId,
+            quantity: oi.quantity,
+          }))
+        );
+        const fallbackStandard = ShippingService.calculateStandardShippingCost(300, totalWeight);
+        shippingCost = shippingMethod === 'express'
+          ? ShippingService.calculateExpressShippingCost(fallbackStandard, subtotal)
+          : fallbackStandard;
       }
 
       // Calculate tax from settings

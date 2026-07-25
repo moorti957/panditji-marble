@@ -8,7 +8,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { useInView } from 'react-intersection-observer';
 
 // Components
-import  Container  from '../../components/ui/Container';
+import Container from '../../components/ui/Container';
 import { ProductCard } from '../../components/cards/ProductCard';
 import { Button } from '../../components/ui/Button';
 import { Input } from '../../components/ui/Input';
@@ -34,6 +34,7 @@ import { useProducts } from '../../features/products/hooks/useProducts';
 import { useCategories } from '../../features/categories/hooks/useCategories';
 import { useDebounce } from '../../hooks/useDebounce';
 import { useMediaQuery } from '../../hooks/useMediaQuery';
+import { logSearch } from '@/features/activity/api/activityApi';
 
 // Types
 import { ProductFilters } from '../../types';
@@ -46,17 +47,17 @@ export default function ProductsPage() {
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
 
   // Filters state
- const inStockParam = searchParams.get('inStock');
+  const inStockParam = searchParams.get('inStock');
 
-const [filters, setFilters] = useState<ProductFilters>({
-  category: searchParams.get('category') || '',
-  search: searchParams.get('search') || '',
-  minPrice: Number(searchParams.get('minPrice')) || 0,
-  maxPrice: Number(searchParams.get('maxPrice')) || 100000,
-  sort: (searchParams.get('sort') as ProductFilters['sort']) || 'newest',
-  inStock: inStockParam ? inStockParam === 'true' : undefined,
-  material: searchParams.get('material') || '',
-});
+  const [filters, setFilters] = useState<ProductFilters>({
+    category: searchParams.get('category') || '',
+    search: searchParams.get('search') || '',
+    minPrice: Number(searchParams.get('minPrice')) || 0,
+    maxPrice: Number(searchParams.get('maxPrice')) || 100000,
+    sort: (searchParams.get('sort') as ProductFilters['sort']) || 'newest',
+    inStock: inStockParam ? inStockParam === 'true' : undefined,
+    material: searchParams.get('material') || '',
+  });
 
   // Debounce search to avoid excessive API calls
   const debouncedSearch = useDebounce(filters.search, 300);
@@ -91,6 +92,13 @@ const [filters, setFilters] = useState<ProductFilters>({
       fetchNextPage();
     }
   }, [inView, hasNextPage, isFetchingNextPage, fetchNextPage]);
+
+  // Log search activity when search query produces results
+  useEffect(() => {
+    if (debouncedSearch && !isLoading) {
+      logSearch(debouncedSearch, allProducts.length);
+    }
+  }, [debouncedSearch, isLoading, allProducts.length]);
 
   // Update URL when filters change (for shareability)
   useEffect(() => {
