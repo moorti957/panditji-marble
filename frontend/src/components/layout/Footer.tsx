@@ -254,8 +254,8 @@ dark:text-white/60">
                 <li className="flex items-center gap-3 text-brown-light
 dark:text-white/60">
                   <Mail className="w-4 h-4 text-gold shrink-0" />
-                  <a href="mailto:sharmaravi2794@gmail.com" className="hover:text-gold transition-colors">
-                    sharmaravi2794@gmail.com 
+                  <a href="mailto:rajeshasd45@gmail.com" className="hover:text-gold transition-colors">
+                    rajeshasd45@gmail.com 
 
 
                   </a>

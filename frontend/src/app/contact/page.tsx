@@ -84,8 +84,8 @@ export default function ContactPage() {
     {
       icon: <Mail className="w-5 h-5 text-gold-dark" />,
       label: 'Email',
-      value: 'sharmaravi2794@gmail.com',
-      link: 'mailto:sharmaravi2794@gmail.com',
+      value: 'rajeshasd45@gmail.com',
+      link: 'mailto:rajeshasd45@gmail.com',
     },
     {
       icon: <Clock className="w-5 h-5 text-gold-dark" />,
